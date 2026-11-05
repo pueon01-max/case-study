@@ -222,7 +222,7 @@ const CASES = {
     tab: "Luckin Campaign",
     meta: ["Global Campaign · Promotion Web", "Luckin Coffee", "Case 04"],
     titleLines: ["Brew", "your luck."],
-    hero: { kind: "image", src: "img/camp-hero.jpg", alt: "You're missing your luck QR 포스터 키비주얼" },
+    hero: { kind: "image", src: "img/camp-hero.jpg", site: "campaign/index.html", siteLinks: [["campaign/index.html", "프로모션 사이트 열기"], ["campaign/brew.html", "Brew 체험 열기"]], alt: "You're missing your luck QR 포스터 키비주얼" },
     statement: "<strong>You’re missing your luck.</strong> 놓칠까 봐 찍게 되는 QR 캠페인.",
     overview: "BREW YOUR LUCK은 글로벌 MZ 소비자가 오프라인 QR 포스터로 모바일 웹에 들어와, 커피가 퍼지는 인터랙션으로 랜덤 리워드를 확인하고, 루이싱 앱 다운로드까지 자연스럽게 이어지도록 설계한 QR 기반 인터랙티브 프로모션이다.",
     facts: [["Role", null], ["Period", null], ["Team", null], ["Tools", "Figma"]],

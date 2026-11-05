@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Luckin Campaign</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="#hero" class="logo" aria-label="Luckin Coffee Home">
+        <img src="./imgs/홈 로고.webp" alt="Luckin logo" />
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#hero">HOME</a>
+        <a href="about.html">About us</a>
+        <a href="investor.html">Investor</a>
+        <a href="#subway">Partner Login</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 01 HERO VIDEO -->
+    <section class="hero" id="hero">
+      <video
+        class="hero__video"
+        id="heroVideo"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+      >
+        <source src="./imgs/캠페인최종.mp4" type="video/mp4" />
+      </video>
+
+      <div class="hero__dim"></div>
+
+      <div class="hero__content">
+        <p class="hero__brand reveal">LUCKIN COFFEE</p>
+
+        <p class="hero__copy reveal delay-1">
+          “create lucky moments and<br />
+          inspire a desire for a better life.”
+        </p>
+<a href="./brew.html" class="hero-luck-btn reveal delay-2">
+  Get Your Luck
+</a>
+
+        <button class="sound-btn reveal delay-2" id="soundBtn" type="button">
+          SOUND ON
+        </button>
+      </div>
+    </section>
+
+    <!-- 02 SUBWAY DOWNLOAD SECTION -->
+    <section class="subway" id="subway">
+      <img
+        src="./imgs/큰큐알코드.webp"
+        alt="Luckin subway campaign screen"
+        class="subway__img"
+      />
+
+      <a href="#" class="download-hotspot" aria-label="Download Luckin Coffee App">
+        Download App
+      </a>
+    </section>
+
+    <!-- 03 POSTERS -->
+    <section class="posters" id="posters">
+      <div class="posters__left reveal">
+        <h2>You Can<br />Find Us</h2>
+        <span class="flower">✣</span>
+        <p>FIND US, AND TAKE YOUR LUCK</p>
+        <small>luckin coffee</small>
+      </div>
+
+      <div class="posters__right">
+        <article class="poster-card reveal delay-1">
+          <img src="./imgs/하단포스터1.webp" alt="Luckin poster 1" />
+        </article>
+
+        <article class="poster-card reveal delay-2">
+          <img src="./imgs/하단포스터2.webp" alt="Luckin poster 2" />
+        </article>
+
+        <article class="poster-card reveal delay-3">
+          <img src="./imgs/하단포스터3.webp" alt="Luckin poster 3" />
+        </article>
+      </div>
+    </section>
+
+    <!-- 04 MAP -->
+    <section class="map-section" id="map">
+      <div class="map-copy reveal">
+        <span>GLOBAL PRESENCE</span>
+        <h2>Brewing Luck<br />Around the World</h2>
+        <p>
+          From bustling cities to inspiring communities,<br />
+          we're creating lucky moments together.
+        </p>
+        <a href="#city-china">OUR STORY →</a>
+      </div>
+
+      <div class="map-board reveal delay-1" id="mapBoard">
+        <canvas id="worldCanvas"></canvas>
+
+        <button class="map-marker" data-name="NEWYORK" data-target="#city-newyork" data-vx="0.31" data-vy="0.27"></button>
+        <button class="map-marker" data-name="CHINA" data-target="#city-china" data-vx="0.72" data-vy="0.30"></button>
+        <button class="map-marker" data-name="SEOUL" data-target="#city-seoul" data-vx="0.76" data-vy="0.33"></button>
+        <button class="map-marker" data-name="SHINGAPORE" data-target="#city-singapore" data-vx="0.75" data-vy="0.51"></button>
+
+        <div class="map-tooltip" id="mapTooltip"></div>
+      </div>
+    </section>
+
+    <!-- 05 CHINA -->
+    <section class="city-wrap" id="city-china" data-city="china">
+      <div class="city-caption reveal">we start in china</div>
+
+      <div class="city-stage">
+        <img src="./imgs/CHINA.webp" alt="China Luckin Coffee store" class="city-img" />
+
+        <div class="city-dark"></div>
+
+        <div class="organic-flow">
+          <span class="flow flow-1"></span>
+          <span class="flow flow-2"></span>
+          <span class="flow flow-3"></span>
+          <span class="flow-line"></span>
+        </div>
+
+        <div class="drag-card js-drag-card">
+          <div class="drag-card__inner">
+            <div class="drag-card__face drag-card__front">
+              <img src="./imgs/상하이 플립 블랙.webp" alt="Shanghai black card" />
+            </div>
+
+            <div class="drag-card__face drag-card__back">
+              <img src="./imgs/상하이플립뒷면.webp" alt="Shanghai white card" />
+            </div>
+          </div>
+
+          <div class="drag-hint">drag to flip</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 SHINGAPORE -->
+    <section class="city-wrap" id="city-singapore" data-city="singapore">
+      <div class="city-caption reveal">Singapore</div>
+
+      <div class="city-stage">
+        <img src="./imgs/SHINGAPORE.webp" alt="Shingapore Luckin Coffee store" class="city-img" />
+
+        <div class="city-dark"></div>
+
+        <div class="organic-flow">
+          <span class="flow flow-1"></span>
+          <span class="flow flow-2"></span>
+          <span class="flow flow-3"></span>
+          <span class="flow-line"></span>
+        </div>
+
+        <div class="drag-card js-drag-card">
+          <div class="drag-card__inner">
+            <div class="drag-card__face drag-card__front">
+              <img src="./imgs/싱가폴 플립 블랙.webp" alt="Singapore black card" />
+            </div>
+
+            <div class="drag-card__face drag-card__back">
+              <img src="./imgs/싱가폴 픕립뒷면.webp" alt="Singapore white card" />
+            </div>
+          </div>
+
+          <div class="drag-hint">drag to flip</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 NEWYORK -->
+    <section class="city-wrap" id="city-newyork" data-city="newyork">
+      <div class="city-caption reveal">NEWYORK</div>
+
+      <div class="city-stage">
+        <img src="./imgs/NEWYORK.webp" alt="New York Luckin Coffee store" class="city-img" />
+
+        <div class="city-dark"></div>
+
+        <div class="organic-flow">
+          <span class="flow flow-1"></span>
+          <span class="flow flow-2"></span>
+          <span class="flow flow-3"></span>
+          <span class="flow-line"></span>
+        </div>
+
+        <div class="drag-card js-drag-card">
+          <div class="drag-card__inner">
+            <div class="drag-card__face drag-card__front">
+              <img src="./imgs/뉴욕플립 블랙.webp" alt="New York black card" />
+            </div>
+
+            <div class="drag-card__face drag-card__back">
+              <img src="./imgs/뉴욕플립 뒷면.webp" alt="New York white card" />
+            </div>
+          </div>
+
+          <div class="drag-hint">drag to flip</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 SEOUL GRAND LAUNCH -->
+    <section class="city-wrap city-wrap--seoul" id="city-seoul">
+      <div class="city-stage seoul-stage">
+        <img src="./imgs/SEOUL.webp" alt="Seoul Luckin Coffee store" class="city-img" />
+
+        <div class="seoul-launch-wrap" id="seoulLaunchWrap">
+          <div class="seoul-launch" id="seoulLaunch">
+            Seoul, we have arrived.
+          </div>
+        </div>
+
+        <div class="seoul-impact-ring"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./world-map-data.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

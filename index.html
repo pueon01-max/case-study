@@ -423,6 +423,45 @@ sup.fn{font-size:15px;vertical-align:super;margin-left:3px;opacity:.6;font-weigh
   .proc{grid-template-columns:1fr}
   .learn2{grid-template-columns:1fr}
 }
+
+/* live site inside the hero MacBook */
+.mac .scr.live{background:#000}
+.mac .scr.live iframe{position:absolute;left:0;top:0;width:1440px;height:900px;border:0;transform:scale(var(--s,.6));transform-origin:0 0;background:#000}
+.livebar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:clamp(28px,3vw,40px);position:relative;z-index:3}
+.livebar a{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;font-size:15px;font-weight:600;text-decoration:none;color:var(--a-ink);background:var(--a-glass);border:1px solid var(--a-gline);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.livebar a:first-child{background:var(--a-hi);color:#fff;border-color:transparent}
+.livebar .dot{width:8px;height:8px;border-radius:50%;background:#3dff8a;box-shadow:0 0 0 0 rgba(61,255,138,.6);animation:live 1.8s infinite}
+@keyframes live{70%{box-shadow:0 0 0 9px rgba(61,255,138,0)}100%{box-shadow:0 0 0 0 rgba(61,255,138,0)}}
+
+/* CITY — dot posters per city, flip cards */
+.why3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:clamp(40px,5vw,64px)}
+.why3 div{padding:24px 22px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.why3 .ic{width:40px;height:40px;padding:9px;border-radius:12px;background:var(--sol-hi);color:var(--sol-bg);box-sizing:border-box}
+.why3 b{display:block;font-size:19px;font-weight:600;margin:16px 0 8px}
+.why3 p{font-size:15.5px;line-height:1.65;opacity:.72}
+.cities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2vw,28px);margin-top:clamp(48px,6vw,80px)}
+.city{display:flex;flex-direction:column;gap:18px}
+.cstage{position:relative;border-radius:26px;overflow:hidden;padding:clamp(22px,2.6vw,34px) clamp(30px,4vw,54px);isolation:isolate;background:#0b0d16}
+.cstage > img.place{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.55;filter:saturate(.9);transform:scale(1.06);transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.cstage::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 50% at 50% 55%,color-mix(in srgb,var(--glow) 70%,transparent),transparent 70%),linear-gradient(180deg,rgba(5,7,15,.25),rgba(5,7,15,.75))}
+.city:hover .cstage > img.place{transform:scale(1)}
+.flip{position:relative;display:block;width:100%;aspect-ratio:2110/2982;perspective:1400px;border:0;padding:0;background:none;cursor:pointer}
+.flip .in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.flip.on .in{transform:rotateY(180deg)}
+.flip img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;backface-visibility:hidden;-webkit-backface-visibility:hidden;filter:drop-shadow(0 30px 40px rgba(0,0,0,.5))}
+.flip img.bk{transform:rotateY(180deg)}
+.flip .hint{position:absolute;left:50%;bottom:-6px;transform:translate(-50%,100%);font-size:12.5px;font-weight:600;color:#fff;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.14);backdrop-filter:blur(10px);white-space:nowrap}
+.cstage{padding-bottom:clamp(54px,5vw,64px)}
+.ctxt .nm{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.ctxt .nm b{font-size:22px;font-weight:600}
+.ctxt .nm span{font-size:13.5px;opacity:.55}
+.ctxt .lm{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.ctxt .lm span{font-size:13px;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.ctxt p{font-size:15.5px;line-height:1.65;opacity:.75}
+.ctxt .cp{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;margin-top:14px;font-size:14px;line-height:1.5}
+.ctxt .cp dt{font-weight:600;color:var(--sol-hi)}
+.ctxt .cp dd{margin:0;opacity:.8}
+@media (max-width:900px){.why3,.cities{grid-template-columns:1fr}.cstage{padding-inline:18%}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}.reveal-text .w{color:var(--sol-ink)}}
 </style>
 </head>
@@ -448,6 +487,18 @@ const LINE = { compose: ["img/compose-menu.jpg", "img/compose-product.jpg"], gue
 /* extra material per decision: Compose's 3D bottom-nav icons, exported from the Figma slide as transparent PNGs */
 const EXTRA = { compose: { 2: { icons: [["img/icons/nav-home.png", "홈"], ["img/icons/nav-card.png", "카드"], ["img/icons/nav-member.png", "멤버십"], ["img/icons/nav-gift.png", "기프트샵"], ["img/icons/nav-more.png", "더보기"]],
   cap: "컴포즈 옐로를 입힌 하단 메뉴 아이콘 다섯 개" } } };
+/* city cards: dot-drawn posters, one per city, each flips from the black "you're missing" side to the blue "go get" side with the QR */
+const CITY = { "luckin-campaign": {
+  title: "도시마다, <b>그 도시의 행운</b>.",
+  lead: "포스터는 도시마다 따로 그렸다. 그 도시를 가장 먼저 떠올리게 하는 랜드마크를 점으로 찍어, 포스터 속 QR과 같은 언어로 보이게 했다.",
+  why: [["qr", "QR과 같은 언어", "QR은 점(모듈)의 집합이다. 스카이라인과 네잎클로버를 하프톤 도트로 그려, QR이 광고 위에 덧붙인 코드가 아니라 그림의 일부처럼 녹아들게 했다."],
+        ["globe", "도시의 얼굴", "상하이 · 싱가포르 · 뉴욕, 그 도시 사람이 바로 알아보는 랜드마크를 골랐다. ‘Hey Shanghai’처럼 도시 이름을 직접 불러 내 도시의 행운이라는 느낌을 줬다."],
+        ["layers", "두 장의 얼굴", "검은 앞면은 ‘You’re missing your luck’으로 FOMO를, 파란 뒷면은 ‘Go get ur luck’과 QR로 행동을 건넨다. 웹에서는 드래그해서 뒤집는다."]],
+  items: [
+    { k: "sh", name: "Shanghai", sub: "China", lm: ["동방명주", "상하이 타워", "루자쭈이 스카이라인"], text: "루이싱이 시작된 도시. 동방명주를 중심으로 한 푸둥 스카이라인과 강물에 비친 반영을 도트로 그렸다.", f: "Hey Shanghai, You’re missing your luck", b: "Go get ur luck · No.1 Coffee Brand in China" },
+    { k: "sg", name: "Singapore", sub: "Southeast Asia", lm: ["마리나 베이 샌즈", "머라이언", "아트사이언스 뮤지엄", "싱가포르 플라이어"], text: "해외 확장의 첫 무대. 마리나 베이의 대표 건축과 머라이언을 한 화면에 모아, 물가 도시의 빛을 점으로 표현했다.", f: "Hey Singapore, You’re missing your luck", b: "Go get ur luck · Luck in every sip" },
+    { k: "ny", name: "New York", sub: "USA", lm: ["자유의 여신상", "엠파이어 스테이트", "원 월드 트레이드 센터", "브루클린 브리지"], text: "2025년 미국 첫 매장이 열린 도시. 자유의 여신상과 맨해튼 스카이라인, 브루클린 브리지로 뉴욕의 첫 행운을 그렸다.", f: "New York Runs on Luck", b: "Go get ur luck · Scan for your luck" }
+  ] } };
 const $ = (s, el = document) => el.querySelector(s);
 const todo = '<span class="todo">확인 필요</span>';
 const pad = n => String(n).padStart(2, "0");
@@ -481,6 +532,7 @@ function render(key) {
     const [l, r] = LINE[key] || [jn.items[1][0], jn.items[jn.items.length - 1][0]];
     stage = `<div class="lineup">${phone(l, "흐름 화면", "side l reflect")}${phone(fx.intent.src, h.alt, "main reflect")}${phone(r, "흐름 화면", "side r reflect")}</div>`;
   } else if (h.kind === "web") stage = `<div class="reflect">${mac(h.src, h.alt)}</div>`;
+  else if (h.site) stage = `<div class="mac"><div class="lid"><div class="scr live" id="live"><iframe src="${h.site}" title="${c.meta[1]} 프로모션 사이트" loading="lazy"></iframe></div></div><div class="base"></div></div>`;
   else stage = disp(h.src, h.alt);
   const chips = `<div class="chips" aria-hidden="true">${fx.fixes.slice(0, 4).map(([icon, kw], i) => `<span class="fchip c${i}">${ic(icon)}${kw}</span>`).join("")}</div>`;
   const tools = (c.facts.find(f => f[0] === "Tools") || [])[1];
@@ -489,6 +541,7 @@ function render(key) {
     <h1>${c.titleLines.join(" ")}</h1>
     <p class="sub">${c.statement}</p>
     <div class="stage" id="stage">${stage}${chips}</div>
+    ${h.siteLinks ? `<div class="livebar">${h.siteLinks.map(([u, t], i) => `<a href="${u}" target="_blank" rel="noopener">${i ? "" : '<span class="dot"></span>'}${t} ↗</a>`).join("")}</div>` : ""}
     <div class="facts"><span>Tools<b>${tools || "—"}</b></span><span>Decisions<b>${c.decisions.length}가지 결정</b></span><span>Fixes<b>${fx.fixes.length}가지 개선</b></span></div>
   </div></section>`;
 
@@ -572,6 +625,19 @@ function render(key) {
     </div></div></article>`; }).join("");
   const sHow = `<section class="room rW center" id="s-how" style="padding-bottom:0"><div class="wrap">${eb(4, "How · 어떻게 결정했나")}<h2 class="h2 rv">${c.decisions.length}가지 결정으로<br><b>다시 그렸다.</b></h2></div></section><div id="chaps">${chaps}</div>`;
 
+  /* CITY — per-city dot posters (campaign only) */
+  let sCity = "";
+  const ct = CITY[key];
+  if (ct) {
+    chapters.push(["s-city", "CITY", "도시 카드"]);
+    sCity = `<section class="room rN" id="s-city"><div class="wrap wide"><div class="center">${eb(chapters.length, "City · 도시 카드")}<h2 class="h2 rv">${ct.title}</h2><p class="lead rv">${ct.lead}</p></div>
+      <div class="cities">${ct.items.map(it => `<div class="city rv"><div class="cstage"><img class="place" src="img/city/${it.k}-place.jpg" alt="" loading="lazy">
+        <button class="flip" aria-label="${it.name} 카드 뒤집기"><span class="in"><img class="fr" src="img/city/${it.k}-front.webp" alt="${it.name} 앞면 · ${it.f}" loading="lazy"><img class="bk" src="img/city/${it.k}-back.webp" alt="${it.name} 뒷면 · ${it.b}" loading="lazy"></span><span class="hint">눌러서 뒤집기 ↻</span></button></div>
+        <div class="ctxt"><div class="nm"><b>${it.name}</b><span>${it.sub}</span></div><div class="lm">${it.lm.map(l => `<span>${l}</span>`).join("")}</div><p>${it.text}</p>
+        <dl class="cp"><dt>앞면</dt><dd>${it.f}</dd><dt>뒷면</dt><dd>${it.b}</dd></dl></div></div>`).join("")}</div>
+      <div class="why3">${ct.why.map(([i, t, p]) => `<div class="rv">${ic(i)}<b>${t}</b><p>${p}</p></div>`).join("")}</div></div></section>`;
+  }
+
   /* 5 FLOW — real screens */
   let sFlow = "";
   if (jn || c.flow) {
@@ -579,7 +645,7 @@ function render(key) {
     const steps = c.flow ? `<div class="steps4 rv" style="--n:${c.flow.steps.length}">${c.flow.steps.map(([a, b, p], i) => `<div><span class="n">${i + 1}</span><b>${a}</b><em>${b}</em><p>${p}</p></div>`).join("")}</div>` : "";
     const items = jn ? jn.items.map(([src, t, p], i) => `<figure>${jn.kind === "phones" ? phone(src, t) : disp(src, t)}<figcaption><span class="n">${i + 1}</span><b>${t}</b><span>${p}</span></figcaption></figure>`).join("") +
       (jn.extra ? jn.extra.items.map(([src, t, p]) => `<figure class="plus">${phone(src, t)}<figcaption><span class="n">+</span><b>${t}</b><span>${p}</span></figcaption></figure>`).join("") : "") : "";
-    sFlow = `<section class="room rB" id="s-flow" style="padding-bottom:clamp(64px,8vw,110px)"><div class="wrap"><div class="center">${eb(5, "Flow · 실제 화면 흐름")}<h2 class="h2 sm rv">${jn ? jn.title : c.flow.title}</h2></div>${steps}</div>
+    sFlow = `<section class="room rB" id="s-flow" style="padding-bottom:clamp(64px,8vw,110px)"><div class="wrap"><div class="center">${eb(chapters.length, "Flow · 실제 화면 흐름")}<h2 class="h2 sm rv">${jn ? jn.title : c.flow.title}</h2></div>${steps}</div>
       ${items ? `<div class="gal" id="gal">${items}</div><div class="wrap"><div class="gal-ctl"><button class="paddle" id="gp" aria-label="이전">‹</button><button class="paddle" id="gn" aria-label="다음">›</button></div>
       ${jn && jn.wide ? `<figure class="board rv"><img src="${jn.wide[0]}" alt="와이어플로우"><figcaption>${jn.wide[1]}</figcaption></figure>` : ""}</div>` : ""}</section>`;
   }
@@ -592,7 +658,7 @@ function render(key) {
     const inner = `<span class="t" style="left:8%">이전</span><span class="t" style="right:8%">이후</span><span class="handle" aria-hidden="true"></span>`;
     const dev2 = cp.kind === "phone" ? phone(cp.after, "리디자인", "", cp.before, inner) : mac(cp.after, "리디자인", cp.before, inner);
     sRes = `<section class="room rN" id="s-res"><div class="wrap"><div class="cmpg${cp.kind === "phone" ? " ph" : ""}">
-      <div>${eb(6, "Result · 전과 후")}<h2 class="h2 sm rv">${cp.title}</h2><p class="lead rv">${cp.note}</p></div>
+      <div>${eb(chapters.length, "Result · 전과 후")}<h2 class="h2 sm rv">${cp.title}</h2><p class="lead rv">${cp.note}</p></div>
       <div class="rv"><div class="slider" id="slider" style="--pos:50%">${dev2}</div><input class="range" id="range" type="range" min="0" max="100" value="50" aria-label="이전과 이후 비교 위치"></div></div></div></section>`;
   }
 
@@ -607,10 +673,13 @@ function render(key) {
   if (c.reflection.learnings.some(l => /기대|Expected/.test(l[0]))) notes.push("기대 효과는 실제 출시 결과가 아니라 기획 단계에서 세운 목표다.");
   const foot = `<footer class="foot"><div class="wrap"><ol>${notes.map(n => `<li>${n}</li>`).join("")}</ol><div class="bc"><span>${c.meta[1]}</span><span>${c.meta[2]} · ${c.meta[0]}</span></div></div></footer>`;
 
-  $("#view").innerHTML = hero + ov + sWhy + sWhat + sWhere + sHow + sFlow + sRes + sLearn + foot;
+  $("#view").innerHTML = hero + ov + sWhy + sWhat + sWhere + sHow + sCity + sFlow + sRes + sLearn + foot;
   $("#lt").textContent = c.tab;
   $("#lsec").innerHTML = chapters.map(([id, k, t], i) => `<button data-go="${id}"><i>${i + 1}</i>${t}</button>`).join("");
   wire(chapters);
+  document.querySelectorAll("#view .flip").forEach(b => b.addEventListener("click", () => b.classList.toggle("on")));
+  const live = $("#live");
+  if (live) { const fit = () => live.style.setProperty("--s", live.clientWidth / 1440); fit(); new ResizeObserver(fit).observe(live); }
 }
 
 function wire(chapters) {
