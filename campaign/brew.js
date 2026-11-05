@@ -1,822 +1,413 @@
+/* Luckin — Brew Your Luck
+   01 Entry (glossy clover on water) → 02 Brewing (liquid vortex, hold to stir)
+   → 03 Reveal (glass card flips over) → 04 Claim (reward in the app) → 05 Share (three luck cards) */
+
 const REWARDS = [
-  { icon: "cup", name: "Free Upgrade", sub: "Any drink, any size", valid: "Valid for 7 days", rarity: "common", weight: 30 },
-  { icon: "cup", name: "Buy 1 Get 1", sub: "Any latte or cappuccino", valid: "Valid for 3 days", rarity: "common", weight: 30 },
-  { icon: "cup", name: "Free Add-On", sub: "Extra shot or syrup", valid: "Valid for 14 days", rarity: "common", weight: 20 },
-  { icon: "cup", name: "Free Matcha Latte", sub: "Regular · hot or iced", valid: "Valid for 5 days", rarity: "rare", weight: 16 },
-  { icon: "cup", name: "50% Off Any Drink", sub: "One use · all sizes", valid: "Valid today only", rarity: "rare", weight: 12 },
-  { icon: "gift", name: "Mystery Reward", sub: "Surprise on next order", valid: "Valid for 2 days", rarity: "epic", weight: 6 }
+  { icon: "latte",  name: "Free Upgrade",       sub: "Any drink, any size",     valid: "Valid for 7 days",  rarity: "common", weight: 30 },
+  { icon: "latte",  name: "Buy 1 Get 1",        sub: "Any latte or cappuccino", valid: "Valid for 3 days",  rarity: "common", weight: 30 },
+  { icon: "latte",  name: "Free Add-On",        sub: "Extra shot or syrup",     valid: "Valid for 14 days", rarity: "common", weight: 20 },
+  { icon: "matcha", name: "Free Matcha Latte",  sub: "Regular · hot or iced",   valid: "Valid for 5 days",  rarity: "rare",   weight: 16 },
+  { icon: "latte",  name: "50% Off Any Drink",  sub: "One use · all sizes",     valid: "Valid today only",  rarity: "rare",   weight: 12 },
+  { icon: "gift",   name: "Mystery Reward",     sub: "Surprise on next order",  valid: "Valid for 2 days",  rarity: "epic",   weight: 6 }
 ];
 
-const ICON_SVG = {
-  cup: `<svg viewBox="0 0 48 48" width="60%" height="60%">
-    <defs>
-      <linearGradient id="cupBody" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#4f7bff"/>
-        <stop offset="100%" stop-color="#0e1ea8"/>
-      </linearGradient>
-    </defs>
-    <path d="M13 15h22l-2.6 24.5a3 3 0 0 1-3 2.5H18.6a3 3 0 0 1-3-2.5L13 15z" fill="url(#cupBody)"/>
-    <path d="M15.5 22h17" stroke="rgba(255,255,255,.4)" stroke-width="1.4" stroke-linecap="round"/>
-    <ellipse cx="24" cy="15" rx="12" ry="3.2" fill="#dce8ff"/>
-    <path d="M15 13.4C15 11.5 19 10 24 10s9 1.5 9 3.4-4 3.4-9 3.4-9-1.5-9-3.4z" fill="#f2f6ff"/>
-    <path d="M27 10.6 30.5 4.5" stroke="#0e1ea8" stroke-width="2" stroke-linecap="round"/>
-    <ellipse cx="19.5" cy="19" rx="2.4" ry="4.5" fill="rgba(255,255,255,.3)"/>
-  </svg>`,
-  gift: `<svg viewBox="0 0 48 48" width="60%" height="60%">
-    <defs>
-      <linearGradient id="giftBody" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#4f7bff"/>
-        <stop offset="100%" stop-color="#0e1ea8"/>
-      </linearGradient>
-    </defs>
-    <rect x="9" y="20" width="30" height="20" rx="2" fill="url(#giftBody)"/>
-    <rect x="9" y="20" width="30" height="7" fill="#0a1590"/>
-    <rect x="21" y="14" width="6" height="26" fill="#dce8ff"/>
-    <path d="M24 14c-3-6-13-6-11 0 1.4 3 8 3 11 0z" fill="#f2f6ff"/>
-    <path d="M24 14c3-6 13-6 11 0-1.4 3-8 3-11 0z" fill="#dce8ff"/>
-  </svg>`
-};
+const SHARE_CARDS = [
+  { title: ["SWEET", "SIGNAL", "DETECTED"], c1: "#b9a0e8", c2: "#8a66c9", c3: "#c7a6dd" },
+  { title: ["BLUE LUCK", "UNLOCKED"],       c1: "#2b56ff", c2: "#1229b8", c3: "#0a1a80" },
+  { title: ["TODAY’S", "BREW", "SPECIAL"],  c1: "#f3d48a", c2: "#c99a3c", c3: "#e9c46e" }
+];
 
-function pickReward() {
-  const total = REWARDS.reduce((sum, reward) => sum + reward.weight, 0);
-  let roll = Math.random() * total;
+const $ = id => document.getElementById(id);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let uid = 0;
 
-  for (const reward of REWARDS) {
-    if (roll < reward.weight) return reward;
-    roll -= reward.weight;
+/* ---------- GLOSSY CLOVER (SVG) ---------- */
+function rot([x, y], a) { const c = Math.cos(a), s = Math.sin(a); return [x * c - y * s, x * s + y * c]; }
+
+function buildClover(svg, light = false) {
+  const p = "c" + (++uid);
+  const leaf = [[0, -10], [-34, -44], [-92, -92], [-74, -140], [-62, -174], [-24, -182], [0, -164], [24, -182], [62, -174], [74, -140], [92, -92], [34, -44], [0, -10]];
+  const stops = light
+    ? [["0", "#ffffff"], [".3", "#eef3ff"], [".7", "#c3d2ff"], ["1", "#8ea8ff"]]
+    : [["0", "#e4ecff"], [".16", "#8eabff"], [".42", "#3159f2"], [".72", "#1530c8"], ["1", "#08156e"]];
+  let defs = `<filter id="${p}b8" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="${p}b5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="${p}b2"><feGaussianBlur stdDeviation="1.6"/></filter>
+    <radialGradient id="${p}glow"><stop offset="0" stop-color="${light ? "#ffffff" : "#5b7fff"}" stop-opacity=".55"/><stop offset="1" stop-color="#5b7fff" stop-opacity="0"/></radialGradient>`;
+  let body = `<circle r="190" fill="url(#${p}glow)"/>`;
+
+  for (let k = 0; k < 4; k++) {
+    const a = (Math.PI / 4) + k * Math.PI / 2;
+    const pts = leaf.map(pt => rot(pt, a));
+    const d = `M${pts[0]} C${pts[1]} ${pts[2]} ${pts[3]} C${pts[4]} ${pts[5]} ${pts[6]} C${pts[7]} ${pts[8]} ${pts[9]} C${pts[10]} ${pts[11]} ${pts[12]}Z`;
+    const [cx, cy] = rot([0, -112], a);
+    defs += `<clipPath id="${p}k${k}"><path d="${d}"/></clipPath>
+      <radialGradient id="${p}g${k}" gradientUnits="userSpaceOnUse" cx="${cx - 30}" cy="${cy - 36}" r="170">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join("")}</radialGradient>`;
+    body += `<g clip-path="url(#${p}k${k})">
+      <path d="${d}" fill="url(#${p}g${k})"/>
+      <path d="${d}" fill="none" stroke="${light ? "rgba(70,100,220,.35)" : "rgba(4,12,80,.65)"}" stroke-width="22" filter="url(#${p}b8)"/>
+      <ellipse cx="${cx - 16}" cy="${cy - 24}" rx="30" ry="15" transform="rotate(-38 ${cx - 16} ${cy - 24})" fill="#fff" opacity="${light ? .9 : .78}" filter="url(#${p}b5)"/>
+      <ellipse cx="${cx + 22}" cy="${cy + 26}" rx="22" ry="8" transform="rotate(-38 ${cx + 22} ${cy + 26})" fill="#9fb8ff" opacity=".35" filter="url(#${p}b5)"/>
+      <circle cx="${cx - 26}" cy="${cy - 34}" r="5" fill="#fff" filter="url(#${p}b2)"/>
+    </g>
+    <path d="${d}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.4"/>`;
   }
-
-  return REWARDS[REWARDS.length - 1];
+  body += `<circle r="13" fill="${light ? "#dfe7ff" : "#0d1d9a"}"/><circle cx="-3" cy="-4" r="4" fill="#fff" opacity=".7" filter="url(#${p}b2)"/>`;
+  svg.innerHTML = `<defs>${defs}</defs>${body}`;
 }
 
-/* SOUND (no external assets, generated via Web Audio) */
+/* ---------- REWARD ICONS ---------- */
+function iconSVG(type) {
+  const p = "i" + (++uid);
+  if (type === "gift") {
+    return `<svg viewBox="0 0 120 150"><defs><linearGradient id="${p}a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5d82ff"/><stop offset="1" stop-color="#1229b8"/></linearGradient></defs>
+      <rect x="18" y="62" width="84" height="70" rx="8" fill="url(#${p}a)"/><rect x="12" y="48" width="96" height="22" rx="6" fill="#2a4cf0"/>
+      <rect x="53" y="48" width="14" height="84" fill="#e8eeff"/>
+      <path d="M60 48c-8-22-38-24-34-6 3 10 24 9 34 6zM60 48c8-22 38-24 34-6-3 10-24 9-34 6z" fill="#f4f7ff" stroke="#c9d6ff" stroke-width="2"/>
+      <rect x="22" y="70" width="10" height="56" rx="5" fill="#fff" opacity=".18"/></svg>`;
+  }
+  const milk = type === "matcha" ? ["#d6ecb8", "#8fbf5e"] : ["#f3e6d4", "#b9814f"];
+  return `<svg viewBox="0 0 120 150"><defs>
+      <linearGradient id="${p}c" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${milk[0]}"/><stop offset=".55" stop-color="${milk[0]}"/><stop offset="1" stop-color="${milk[1]}"/></linearGradient>
+      <linearGradient id="${p}g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".35" stop-color="#fff" stop-opacity=".05"/><stop offset=".85" stop-color="#fff" stop-opacity=".1"/><stop offset="1" stop-color="#fff" stop-opacity=".5"/></linearGradient>
+      <clipPath id="${p}k"><path d="M24 34h72l-8 104a8 8 0 0 1-8 7H40a8 8 0 0 1-8-7z"/></clipPath></defs>
+    <g clip-path="url(#${p}k)">
+      <rect x="0" y="30" width="120" height="120" fill="url(#${p}c)"/>
+      <path d="M20 92c14 6 26-6 40 0s26 8 40 0v60H20z" fill="${milk[1]}" opacity=".55"/>
+      <rect x="34" y="40" width="22" height="20" rx="5" fill="#fff" opacity=".55" transform="rotate(-12 45 50)"/>
+      <rect x="60" y="46" width="22" height="20" rx="5" fill="#fff" opacity=".5" transform="rotate(14 71 56)"/>
+      <rect x="44" y="64" width="20" height="18" rx="5" fill="#fff" opacity=".4" transform="rotate(6 54 73)"/>
+      <rect x="0" y="30" width="120" height="120" fill="url(#${p}g)"/>
+    </g>
+    <path d="M24 34h72l-8 104a8 8 0 0 1-8 7H40a8 8 0 0 1-8-7z" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"/>
+    <ellipse cx="60" cy="34" rx="38" ry="7" fill="#fff" opacity=".85"/>
+    <path d="M28 30c4-14 60-14 64 0" fill="#fff" opacity=".9"/>
+    <circle cx="60" cy="104" r="11" fill="#1d40e6" opacity=".9"/><path d="M55 100c2 5 8 5 10 0" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+
+/* ---------- SOUND ---------- */
 let audioCtx = null;
+function tone(freq, dur, type = "sine", peak = .12) {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(peak, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime + dur);
+    o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+const chime = r => (r === "epic" ? [660, 880, 1320] : r === "rare" ? [560, 840] : [520, 720]).forEach((f, i) => setTimeout(() => tone(f, .4, "triangle", .1), i * 90));
 
-function getAudioCtx() {
-  if (!audioCtx) {
-    const AudioCtor = window.AudioContext || window.webkitAudioContext;
-    if (AudioCtor) audioCtx = new AudioCtor();
+/* ---------- FX CANVAS ---------- */
+const cv = $("fx"), ctx = cv.getContext("2d");
+let W = 0, H = 0, DPR = 1, mode = "ripple", t = 0, extraRings = [];
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W * DPR; cv.height = H * DPR;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (mode === "vortex") { ctx.fillStyle = "#f3f6ff"; ctx.fillRect(0, 0, W, H); }
+}
+addEventListener("resize", resize); resize();
+
+function cloverAnchor() {
+  const r = $("clover").getBoundingClientRect();
+  return { x: r.left + r.width / 2, y: r.top + r.height * .86, s: r.width };
+}
+
+/* 01 — water ripples under the clover */
+function drawRipple() {
+  ctx.clearRect(0, 0, W, H);
+  const { x, y, s } = cloverAnchor();
+  const maxR = Math.max(W, H) * .75;
+  const glow = ctx.createRadialGradient(x, y, 0, x, y, s * .9);
+  glow.addColorStop(0, "rgba(120,150,255,.22)"); glow.addColorStop(1, "rgba(120,150,255,0)");
+  ctx.fillStyle = glow; ctx.beginPath(); ctx.ellipse(x, y, s * .9, s * .32, 0, 0, Math.PI * 2); ctx.fill();
+
+  const ring = (rx, a, w = 1.4) => {
+    const ry = rx * .26;
+    ctx.lineWidth = w;
+    ctx.strokeStyle = `rgba(255,255,255,${a})`;
+    ctx.beginPath(); ctx.ellipse(x, y - 1, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = `rgba(70,100,210,${a * .45})`;
+    ctx.beginPath(); ctx.ellipse(x, y + 1.6, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
+  };
+  const n = 9;
+  for (let i = 0; i < n; i++) {
+    const ph = ((t * .0016) + i / n) % 1;
+    const rx = 40 + ph * maxR;
+    ring(rx, Math.pow(1 - ph, 1.6) * .9);
   }
-  return audioCtx;
+  extraRings = extraRings.filter(r => (r.p += .012) < 1);
+  extraRings.forEach(r => r.p > 0 && ring(30 + r.p * maxR * .8, (1 - r.p) * 1.2, 2.2));
 }
 
-function playTone(freq, duration, type = "sine", peak = 0.16) {
-  const ctx = getAudioCtx();
-  if (!ctx) return;
-
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.type = type;
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(peak, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-
-  osc.connect(gain).connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + duration);
+/* 02 — liquid vortex */
+let parts = [], drops = [], hold = 0, holding = false, ringScale = .55;
+function gauss() { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function initVortex() {
+  parts = Array.from({ length: W < 700 ? 900 : 1500 }, () => ({
+    a: Math.random() * Math.PI * 2,
+    r: 1 + gauss() * .09,
+    sp: .006 + Math.random() * .006,
+    w: 1.2 + Math.random() * 4,
+    hi: Math.random() < .14,
+    ph: Math.random() * 6.28,
+    px: null, py: null
+  }));
+  drops = []; ringScale = .55;
+  ctx.fillStyle = "#f3f6ff"; ctx.fillRect(0, 0, W, H);
+}
+function drawVortex() {
+  hold += ((holding ? 1 : 0) - hold) * .06;
+  ringScale += (1 - ringScale) * .02;
+  ctx.fillStyle = "rgba(243,246,255,.16)"; ctx.fillRect(0, 0, W, H);
+  const cx = W / 2, cy = H / 2 + (W < 700 ? 40 : 10);
+  const R = Math.min(W * (W < 700 ? .46 : .4), H * .78, 640) * ringScale, k = W < 700 ? .72 : .42;
+  /* soft liquid body under the strokes */
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(1, k);
+  const band = ctx.createRadialGradient(0, 0, R * .78, 0, 0, R * 1.2);
+  band.addColorStop(0, "rgba(60,100,240,0)"); band.addColorStop(.45, "rgba(40,80,235,.05)"); band.addColorStop(1, "rgba(60,100,240,0)");
+  ctx.fillStyle = band; ctx.beginPath(); ctx.arc(0, 0, R * 1.2, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  const boost = 1 + hold * 1.8;
+  ctx.lineCap = "round";
+  for (const p of parts) {
+    p.a += p.sp * boost / p.r;
+    const wob = Math.sin(p.a * 3 + t * .03 + p.ph) * .035 + Math.sin(p.a * 7 - t * .02) * .015;
+    const rr = R * (p.r + wob);
+    const x = cx + Math.cos(p.a) * rr, y = cy + Math.sin(p.a) * rr * k + Math.sin(p.a * 2 + p.ph) * 6;
+    if (p.px !== null) {
+      const front = Math.sin(p.a) > 0;
+      const d = Math.abs(p.r - 1) * 8;
+      ctx.strokeStyle = p.hi ? `rgba(255,255,255,${.75 - d * .2})`
+        : front ? `rgba(${18 + d * 40},${40 + d * 60},${200 + d * 20},${.5 - d * .12})`
+                : `rgba(${70 + d * 50},${110 + d * 50},${235},${.32 - d * .08})`;
+      ctx.lineWidth = p.w * (front ? 1.15 : .8);
+      ctx.beginPath(); ctx.moveTo(p.px, p.py); ctx.lineTo(x, y); ctx.stroke();
+    }
+    p.px = x; p.py = y;
+    if (Math.random() < .0009 * boost) {
+      const out = .6 + Math.random();
+      drops.push({ x, y, vx: -Math.sin(p.a) * out * 3 + Math.cos(p.a) * out * 2, vy: -1.5 - Math.random() * 3, r: 1.5 + Math.random() * 3.5, life: 1 });
+    }
+  }
+  drops = drops.filter(d => (d.life -= .012) > 0);
+  for (const d of drops) {
+    d.x += d.vx; d.y += d.vy; d.vy += .12;
+    ctx.fillStyle = `rgba(40,80,230,${d.life * .7})`;
+    ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = `rgba(255,255,255,${d.life * .9})`;
+    ctx.beginPath(); ctx.arc(d.x - d.r * .35, d.y - d.r * .35, d.r * .35, 0, Math.PI * 2); ctx.fill();
+  }
 }
 
-function playTapSound() {
-  playTone(520, 0.12, "sine", 0.14);
+/* 03–05 — soft light motes */
+let motes = [];
+function initMotes() {
+  motes = Array.from({ length: 34 }, () => ({ x: Math.random() * W, y: Math.random() * H, r: 2 + Math.random() * 10, vy: -.15 - Math.random() * .3, a: .08 + Math.random() * .25, ph: Math.random() * 6.28 }));
+}
+function drawMotes() {
+  ctx.clearRect(0, 0, W, H);
+  for (const m of motes) {
+    m.y += m.vy; m.x += Math.sin(t * .01 + m.ph) * .2;
+    if (m.y < -20) { m.y = H + 20; m.x = Math.random() * W; }
+    const g = ctx.createRadialGradient(m.x - m.r * .3, m.y - m.r * .3, 0, m.x, m.y, m.r);
+    g.addColorStop(0, `rgba(255,255,255,${m.a * 2.4})`); g.addColorStop(.6, `rgba(150,180,255,${m.a})`); g.addColorStop(1, "rgba(150,180,255,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2); ctx.fill();
+  }
 }
 
-function playRevealChime(rarity) {
-  const notes =
-    rarity === "epic" ? [660, 880, 1320] :
-    rarity === "rare" ? [560, 840] :
-    [520, 720];
-
-  notes.forEach((freq, index) => {
-    setTimeout(() => playTone(freq, 0.35, "triangle", 0.12), index * 90);
-  });
+function loop() {
+  t++;
+  if (mode === "ripple") drawRipple();
+  else if (mode === "vortex") drawVortex();
+  else drawMotes();
+  requestAnimationFrame(loop);
 }
 
-/* TOAST */
-let toastTimer = null;
-
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-
-  toast.textContent = message;
-  toast.classList.add("is-visible");
-
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2200);
-}
-
-let brewRaf = null;
-let revealRaf = null;
-let revealTimer = null;
-let progressRaf = null;
-let currentReward = REWARDS[0];
-
-const tapBtn = document.getElementById("tapBtn");
-const claimBtn = document.getElementById("claimBtn");
-const tryAgainBtn = document.getElementById("tryAgainBtn");
-
-tapBtn.addEventListener("click", brew);
-tapBtn.addEventListener("touchend", event => {
-  event.preventDefault();
-  brew();
-});
-
-claimBtn.addEventListener("click", goShare);
-tryAgainBtn.addEventListener("click", tryAgain);
-
-/* MAGNETIC BUTTONS */
-function initMagnetic(elements, strength = 0.3) {
-  elements.forEach(el => {
-    if (!el) return;
-
-    el.addEventListener("mousemove", e => {
-      const rect = el.getBoundingClientRect();
-      const relX = e.clientX - (rect.left + rect.width / 2);
-      const relY = e.clientY - (rect.top + rect.height / 2);
-
-      el.style.translate = `${relX * strength}px ${relY * strength}px`;
-    });
-
-    el.addEventListener("mouseleave", () => {
-      el.style.translate = "";
-    });
-  });
-}
-
-initMagnetic(document.querySelectorAll(".brew-btn, .btn-main, .soc-ic"));
-
-/* REVEAL CARD 3D TILT (kicks in once the pop-in animation hands control back) */
-const cardScene = document.querySelector(".card-scene");
-const gCardEl = document.getElementById("gCard");
-let cardTiltReady = false;
-
-if (gCardEl) {
-  gCardEl.addEventListener("animationend", event => {
-    if (event.target !== gCardEl) return;
-    gCardEl.style.animation = "none";
-    cardTiltReady = true;
-  });
-}
-
-if (cardScene && gCardEl) {
-  cardScene.addEventListener("pointermove", e => {
-    if (!cardTiltReady) return;
-
-    const rect = gCardEl.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-
-    gCardEl.style.transform = `rotateX(${py * -14}deg) rotateY(${px * 14}deg) scale(1.02)`;
-  });
-
-  cardScene.addEventListener("pointerleave", () => {
-    if (!cardTiltReady) return;
-    gCardEl.style.transform = "";
-  });
-}
-
+/* ---------- SCENES ---------- */
+const TAGS = { s1: ["01", "ENTRY"], s2: ["02", "BREWING"], s3: ["03", "REVEAL"], s4: ["04", "CLAIM"], s5: ["05", "SHARE"] };
 function go(id) {
-  document.querySelectorAll(".scr").forEach(screen => {
-    screen.classList.remove("active");
-  });
+  document.querySelectorAll(".scr").forEach(s => s.classList.toggle("active", s.id === id));
+  document.body.dataset.scene = id;
+  const [n, l] = TAGS[id];
+  $("sceneTag").innerHTML = `<b>${n}</b><span>${l}</span>`;
+  const idx = Object.keys(TAGS).indexOf(id);
+  document.querySelectorAll("#steps i").forEach((d, i) => d.classList.toggle("on", i === idx));
+  const m = id === "s1" ? "ripple" : id === "s2" ? "vortex" : "motes";
+  if (m !== mode) { mode = m; if (m === "vortex") initVortex(); if (m === "motes") initMotes(); if (m === "ripple") ctx.clearRect(0, 0, W, H); }
+}
 
-  document.getElementById(id).classList.add("active");
-
-  const dark = id === "s2";
-  const color = dark ? "rgba(255,255,255,.9)" : "#0b1680";
-
-  document.getElementById("nd1").setAttribute("fill", color);
-  document.getElementById("nd2").setAttribute("fill", color);
-  document.getElementById("navTxt").style.color = color;
-  document.getElementById("navLang").style.color = dark ? "rgba(255,255,255,.5)" : "#7080b8";
-  document.getElementById("navRing").style.borderColor = color;
+let current = REWARDS[0], brewTimer = null, brewing = false;
+function pick() {
+  const total = REWARDS.reduce((s, r) => s + r.weight, 0);
+  let roll = Math.random() * total;
+  for (const r of REWARDS) { if (roll < r.weight) return r; roll -= r.weight; }
+  return REWARDS[0];
 }
 
 function brew() {
-  clearTimeout(revealTimer);
-  cancelAnimationFrame(brewRaf);
-  cancelAnimationFrame(revealRaf);
-  cancelAnimationFrame(progressRaf);
-
-  playTapSound();
-
-  go("s2");
-  runBrewCanvas();
-  runBrewProgress();
-
-  revealTimer = setTimeout(reveal, 3000);
+  if (brewing) return;
+  brewing = true;
+  tone(520, .12, "sine", .12);
+  extraRings.push({ p: 0 }, { p: -.15 });
+  $("cloverBtn").classList.add("pop");
+  setTimeout(() => { go("s2"); $("cloverBtn").classList.remove("pop"); runBrew(); }, reduced ? 0 : 520);
 }
 
-function runBrewProgress() {
-  const fill = document.getElementById("brewProgressFill");
-  const pct = document.getElementById("brewProgressPct");
-  const start = performance.now();
-
-  if (fill) fill.style.width = "0%";
-  if (pct) pct.textContent = "0%";
-
-  function step(now) {
-    const ratio = Math.min(1, (now - start) / 3000);
-
-    if (fill) fill.style.width = `${ratio * 100}%`;
-    if (pct) pct.textContent = `${Math.round(ratio * 100)}%`;
-
-    if (ratio < 1) {
-      progressRaf = requestAnimationFrame(step);
-    }
-  }
-
-  progressRaf = requestAnimationFrame(step);
-}
-
-function runBrewCanvas() {
-  const canvas = document.getElementById("brewCvs");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const W = canvas.width;
-  const H = canvas.height;
-  const cx = W / 2;
-  const cy = H / 2 + 35;
-  let t = 0;
-
-  const rings = [
-    { rx: 60, ry: 24, spd: .016, br: .75, seed: 1.3 },
-    { rx: 115, ry: 46, spd: .016, br: .62, seed: 2.7 },
-    { rx: 178, ry: 71, spd: .016, br: .48, seed: 0.6 },
-    { rx: 250, ry: 100, spd: .016, br: .35, seed: 3.4 },
-    { rx: 332, ry: 133, spd: .016, br: .24, seed: 1.9 },
-    { rx: 424, ry: 170, spd: .016, br: .15, seed: 4.1 },
-    { rx: 526, ry: 210, spd: .016, br: .09, seed: 2.2 }
-  ];
-
-  const bubbles = [];
-  for (let i = 0; i < 26; i++) {
-    bubbles.push({
-      angle: Math.random() * Math.PI * 2,
-      dist: 20 + Math.random() * 220,
-      speed: .012 + Math.random() * .02,
-      size: 1 + Math.random() * 2.4,
-      drift: Math.random() * Math.PI * 2,
-      life: Math.random()
-    });
-  }
-
-  function wobbleEllipse(rx, ry, wobbleT, seed) {
-    const segments = 48;
-    ctx.beginPath();
-
-    for (let i = 0; i <= segments; i++) {
-      const a = (i / segments) * Math.PI * 2;
-      const wobble = 1 + Math.sin(a * 3 + wobbleT * 1.4 + seed) * 0.035
-        + Math.sin(a * 5 - wobbleT * 0.9 + seed * 2) * 0.02;
-
-      const x = Math.cos(a) * rx * wobble;
-      const y = Math.sin(a) * ry * wobble;
-
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-
-    ctx.closePath();
-  }
-
-  function frame() {
-    ctx.fillStyle = "rgb(12,28,176)";
-    ctx.fillRect(0, 0, W, H);
-
-    const pool = ctx.createRadialGradient(cx, cy, 0, cx, cy, 155);
-    pool.addColorStop(0, "rgba(55,95,255,.26)");
-    pool.addColorStop(.5, "rgba(38,68,210,.1)");
-    pool.addColorStop(1, "rgba(12,28,176,0)");
-    ctx.fillStyle = pool;
-    ctx.fillRect(0, 0, W, H);
-
-    rings.forEach((ring, index) => {
-      const phase = ((t * ring.spd - index * .52) % 4 + 4) % 4;
-      const scale = .28 + phase * .185;
-      let alpha = ring.br * (1 - phase / 4) * Math.sin(phase / 4 * Math.PI) * 1.9;
-      alpha = Math.max(0, Math.min(1, alpha));
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(scale, scale);
-
-      const gradient = ctx.createLinearGradient(0, -ring.ry, 0, ring.ry);
-      gradient.addColorStop(0, `rgba(160,210,255,${alpha})`);
-      gradient.addColorStop(.35, `rgba(110,170,255,${alpha * .7})`);
-      gradient.addColorStop(.5, `rgba(80,140,235,${alpha * .5})`);
-      gradient.addColorStop(.65, `rgba(110,170,255,${alpha * .7})`);
-      gradient.addColorStop(1, `rgba(160,210,255,${alpha})`);
-
-      wobbleEllipse(ring.rx, ring.ry, t * .05, ring.seed);
-      ctx.strokeStyle = gradient;
-      ctx.lineWidth = 2.4 / scale;
-      ctx.shadowColor = `rgba(160,210,255,${alpha * .8})`;
-      ctx.shadowBlur = 6 / scale;
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    });
-
-    bubbles.forEach(bubble => {
-      bubble.life += bubble.speed * .012;
-      if (bubble.life > 1) {
-        bubble.life = 0;
-        bubble.angle = Math.random() * Math.PI * 2;
-        bubble.dist = 15 + Math.random() * 30;
-      }
-
-      const swirl = bubble.angle + t * .02 + bubble.life * 2.4;
-      const radius = bubble.dist + bubble.life * 240;
-      const wob = Math.sin(t * .04 + bubble.drift) * 6;
-
-      const bx = cx + Math.cos(swirl) * radius * 2.5 + wob;
-      const by = cy + Math.sin(swirl) * radius * .58;
-
-      const bubbleAlpha = Math.sin(bubble.life * Math.PI) * .55;
-
-      if (bubbleAlpha > 0.02) {
-        ctx.beginPath();
-        ctx.arc(bx, by, bubble.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(225,240,255,${bubbleAlpha})`;
-        ctx.fill();
-      }
-    });
-
-    const fast = ((t * .026) % 4 + 4) % 4;
-    const fScale = .28 + fast * .185;
-    let fAlpha = .95 * (1 - fast / 4) * Math.sin(fast / 4 * Math.PI) * 1.9;
-    fAlpha = Math.max(0, Math.min(1, fAlpha));
-
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.scale(fScale, fScale);
-    wobbleEllipse(54, 21, t * .06, 5.5);
-    ctx.strokeStyle = `rgba(220,240,255,${fAlpha})`;
-    ctx.shadowColor = `rgba(220,240,255,${fAlpha * .8})`;
-    ctx.shadowBlur = 8 / fScale;
-    ctx.lineWidth = 3 / fScale;
-    ctx.stroke();
-    ctx.restore();
-
-    for (let j = 0; j < 24; j++) {
-      const angle = (j / 24) * Math.PI * 2 + t * .025;
-      const d1 = 44 + Math.sin(t * .18 + j * 1.1) * 14;
-      const d2 = 108 + Math.sin(t * .14 + j * .9) * 24;
-      const x1 = cx + Math.cos(angle) * d1 * 2.55;
-      const y1 = cy + Math.sin(angle) * d1 * .58;
-      const x2 = cx + Math.cos(angle) * d2 * 2.55;
-      const y2 = cy + Math.sin(angle) * d2 * .58;
-      const lineAlpha = .042 + Math.abs(Math.sin(t * .28 + j * .85)) * .06;
-
-      const lineGradient = ctx.createLinearGradient(x1, y1, x2, y2);
-      lineGradient.addColorStop(0, "rgba(140,195,255,0)");
-      lineGradient.addColorStop(.45, `rgba(160,210,255,${lineAlpha})`);
-      lineGradient.addColorStop(1, "rgba(140,195,255,0)");
-
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.strokeStyle = lineGradient;
-      ctx.lineWidth = 1.1;
-      ctx.stroke();
-    }
-
-    t += .9;
-    brewRaf = requestAnimationFrame(frame);
-  }
-
-  frame();
+function runBrew() {
+  let prog = 0, last = performance.now();
+  cancelAnimationFrame(brewTimer);
+  const step = now => {
+    const dt = now - last; last = now;
+    prog += dt / 3400 * (1 + hold * 1.4);
+    if (prog >= 1) { brewing = false; holding = false; reveal(); return; }
+    brewTimer = requestAnimationFrame(step);
+  };
+  brewTimer = requestAnimationFrame(step);
 }
 
 function reveal() {
-  cancelAnimationFrame(brewRaf);
-  cancelAnimationFrame(progressRaf);
+  current = pick();
+  const r = current;
+  $("gIcon").innerHTML = iconSVG(r.icon);
+  $("gName").textContent = r.name; $("gSub").textContent = r.sub; $("gValid").textContent = r.valid;
+  const ra = $("gRarity"); ra.textContent = r.rarity.toUpperCase(); ra.className = `g-rarity g-rarity--${r.rarity}`;
+  $("psIcon").innerHTML = iconSVG(r.icon);
+  $("psName").textContent = r.name; $("psSub").textContent = r.sub; $("psValid").textContent = r.valid;
+  $("useNow").classList.remove("done"); $("useNow").textContent = "Use Now";
 
-  const reward = pickReward();
-  currentReward = reward;
-
-  document.getElementById("gIcon").innerHTML = ICON_SVG[reward.icon] || "";
-  document.getElementById("gName").textContent = reward.name;
-  document.getElementById("gSub").textContent = reward.sub;
-  document.getElementById("gValid").textContent = reward.valid;
-
-  const rarityEl = document.getElementById("gRarity");
-  rarityEl.textContent = reward.rarity.toUpperCase();
-  rarityEl.className = `g-rarity g-rarity--${reward.rarity}`;
-
-  createSparks();
-
-  const card = document.getElementById("gCard");
-  card.classList.toggle("rarity-epic", reward.rarity === "epic");
-  cardTiltReady = false;
-  card.style.transform = "";
-  card.style.animation = "none";
+  const card = $("gCard");
+  card.classList.remove("shown", "flipping", "epic"); card.style.transform = "";
   void card.offsetWidth;
-  card.style.animation = "";
-
-  if (reward.rarity === "epic") {
-    createConfetti();
-  } else {
-    const confettiEl = document.getElementById("confettiEl");
-    if (confettiEl) confettiEl.innerHTML = "";
-  }
-
+  card.classList.add("flipping");
+  card.classList.toggle("epic", r.rarity === "epic");
+  sparks();
+  $("confettiEl").innerHTML = "";
   go("s3");
-  runRevealCanvas();
-  playRevealChime(reward.rarity);
+  setTimeout(() => { chime(r.rarity); if (r.rarity !== "common") confetti(r.rarity === "epic" ? 40 : 18); }, 650);
 }
-
-function createConfetti() {
-  const confettiEl = document.getElementById("confettiEl");
-  if (!confettiEl) return;
-
-  confettiEl.innerHTML = "";
-
-  const colors = ["#7c3aed", "#f59e0b", "#2558ff", "#22d3aa", "#ff5fa8", "#ffffff"];
-
-  for (let i = 0; i < 30; i++) {
-    const el = document.createElement("div");
-    el.className = "cf-piece";
-
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 90 + Math.random() * 160;
-    const dx = Math.cos(angle) * dist;
-    const dy = Math.sin(angle) * dist * 0.7 + 60;
-    const rot = 180 + Math.random() * 540;
-    const size = 5 + Math.random() * 5;
-    const isCircle = Math.random() > 0.5;
-
-    el.style.cssText = `
-      width:${size}px;
-      height:${size * (isCircle ? 1 : 0.5)}px;
-      background:${colors[Math.floor(Math.random() * colors.length)]};
-      border-radius:${isCircle ? "50%" : "1px"};
-      --dx:${dx}px;
-      --dy:${dy}px;
-      --rot:${rot}deg;
-      --dur:${1 + Math.random() * 0.6}s;
-      --del:${Math.random() * 0.15}s;
-    `;
-
-    confettiEl.appendChild(el);
-  }
-}
-
-function createSparks() {
-  const sparksEl = document.getElementById("sparksEl");
-  sparksEl.innerHTML = "";
-
-  const sparks = [
-    { t: "9%", l: "3%", dx: "-16px", dy: "-22px", w: 7, dur: "2.1s", del: "0s", col: "255,255,255" },
-    { t: "6%", l: "84%", dx: "14px", dy: "-18px", w: 5, dur: "2.4s", del: ".28s", col: "200,220,255" },
-    { t: "78%", l: "5%", dx: "-12px", dy: "18px", w: 6, dur: "2s", del: ".62s", col: "255,255,255" },
-    { t: "74%", l: "88%", dx: "16px", dy: "14px", w: 4, dur: "2.3s", del: "1s", col: "200,220,255" },
-    { t: "42%", l: "95%", dx: "18px", dy: "-8px", w: 5, dur: "2.1s", del: ".46s", col: "255,255,255" },
-    { t: "22%", l: "1%", dx: "-14px", dy: "-10px", w: 4, dur: "1.9s", del: ".9s", col: "200,220,255" },
-    { t: "92%", l: "50%", dx: "0px", dy: "20px", w: 5, dur: "2.2s", del: "1.25s", col: "255,255,255" },
-    { t: "12%", l: "54%", dx: "6px", dy: "-22px", w: 6, dur: "1.8s", del: ".18s", col: "200,220,255" },
-    { t: "56%", l: "52%", dx: "-9px", dy: "-16px", w: 3, dur: "2.5s", del: ".7s", col: "255,255,255" }
-  ];
-
-  sparks.forEach(spark => {
-    const el = document.createElement("div");
-    el.className = "spk";
-    el.style.cssText = `
-      top:${spark.t};
-      left:${spark.l};
-      width:${spark.w}px;
-      height:${spark.w}px;
-      background:rgba(${spark.col},.92);
-      --dx:${spark.dx};
-      --dy:${spark.dy};
-      --dur:${spark.dur};
-      --del:${spark.del};
-      animation-duration:${spark.dur};
-      animation-delay:${spark.del};
-    `;
-    sparksEl.appendChild(el);
-  });
-}
-
-function runRevealCanvas() {
-  const canvas = document.getElementById("revealCvs");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const W = canvas.width;
-  const H = canvas.height;
-  const cx = W / 2;
-  const cy = H * .62;
-  let t = 0;
-
-  const motes = [];
-  for (let i = 0; i < 45; i++) {
-    motes.push({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: Math.random() * 2 + .4,
-      vx: (Math.random() - .5) * .22,
-      vy: -Math.random() * .3 - .05,
-      a: Math.random() * .3 + .06,
-      life: Math.random()
-    });
-  }
-
-  function frame() {
-    ctx.clearRect(0, 0, W, H);
-
-    for (let i = 0; i < 6; i++) {
-      const phase = ((t * .01 - i * .52) % 4 + 4) % 4;
-      const scale = .32 + phase * .17;
-      let alpha = .38 * (1 - phase / 4) * Math.sin(phase / 4 * Math.PI) * 1.9;
-      alpha = Math.max(0, Math.min(.5, alpha));
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(scale, scale);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 90 + i * 24, 36 + i * 10, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(37,80,216,${alpha})`;
-      ctx.lineWidth = 1.6 / scale;
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    motes.forEach(mote => {
-      mote.life += .0028;
-
-      if (mote.life > 1) {
-        mote.life = 0;
-        mote.x = Math.random() * W;
-        mote.y = H + 4;
-      }
-
-      mote.x += mote.vx;
-      mote.y += mote.vy;
-
-      const fade = Math.sin(mote.life * Math.PI) * mote.a;
-
-      ctx.beginPath();
-      ctx.arc(mote.x, mote.y, mote.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(80,130,230,${Math.max(0, fade)})`;
-      ctx.fill();
-    });
-
-    t++;
-    revealRaf = requestAnimationFrame(frame);
-  }
-
-  frame();
-}
-
-function tryAgain() {
-  cancelAnimationFrame(revealRaf);
-  brew();
-}
-
-function goShare() {
-  cancelAnimationFrame(revealRaf);
-  go("s4");
-}
-
-window.addEventListener("resize", () => {
-  ["brewCvs", "revealCvs"].forEach(id => {
-    const canvas = document.getElementById(id);
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
+$("gCard").addEventListener("animationend", e => {
+  if (e.animationName !== "flipIn") return;
+  const c = $("gCard"); c.classList.remove("flipping"); c.classList.add("shown");
 });
 
-document.addEventListener("touchmove", event => {
-  event.preventDefault();
-}, { passive: false });
-
-/* SHARE CARD RENDER (canvas, no external assets) */
-function roundRectPath(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-
-function rarityBadgeColor(rarity) {
-  if (rarity === "epic") return "#7c3aed";
-  if (rarity === "rare") return "#2550d8";
-  return "#7080b8";
-}
-
-function drawRewardIcon(ctx, type, cx, cy, size) {
-  ctx.save();
-  ctx.translate(cx - size / 2, cy - size / 2);
-
-  const s = size / 48;
-  const grad = ctx.createLinearGradient(0, 0, 0, 48 * s);
-  grad.addColorStop(0, "#4f7bff");
-  grad.addColorStop(1, "#0e1ea8");
-
-  if (type === "gift") {
-    ctx.fillStyle = grad;
-    roundRectPath(ctx, 9 * s, 20 * s, 30 * s, 20 * s, 2 * s);
-    ctx.fill();
-
-    ctx.fillStyle = "#0a1590";
-    ctx.fillRect(9 * s, 20 * s, 30 * s, 7 * s);
-
-    ctx.fillStyle = "#dce8ff";
-    ctx.fillRect(21 * s, 14 * s, 6 * s, 26 * s);
-
-    ctx.beginPath();
-    ctx.ellipse(18 * s, 14 * s, 5 * s, 4 * s, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "#f2f6ff";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.ellipse(30 * s, 14 * s, 5 * s, 4 * s, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "#dce8ff";
-    ctx.fill();
-  } else {
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.moveTo(13 * s, 15 * s);
-    ctx.lineTo(35 * s, 15 * s);
-    ctx.lineTo(32.4 * s, 39.5 * s);
-    ctx.quadraticCurveTo(32.4 * s, 42 * s, 29.9 * s, 42 * s);
-    ctx.lineTo(18.6 * s, 42 * s);
-    ctx.quadraticCurveTo(16.1 * s, 42 * s, 15.9 * s, 39.5 * s);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.ellipse(24 * s, 15 * s, 12 * s, 3.2 * s, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "#dce8ff";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.ellipse(24 * s, 13.4 * s, 9 * s, 3.4 * s, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "#f2f6ff";
-    ctx.fill();
-
-    ctx.strokeStyle = "#0e1ea8";
-    ctx.lineWidth = 2 * s;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(27 * s, 10.6 * s);
-    ctx.lineTo(30.5 * s, 4.5 * s);
-    ctx.stroke();
+function sparks() {
+  const el = $("sparksEl"); el.innerHTML = "";
+  for (let i = 0; i < 16; i++) {
+    const s = document.createElement("span");
+    s.className = "spk" + (i % 3 === 0 ? " star" : "");
+    s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;--dur:${1.6 + Math.random() * 1.6}s;--del:${Math.random() * 2}s`;
+    el.appendChild(s);
   }
-
-  ctx.restore();
+}
+function confetti(n) {
+  const el = $("confettiEl"); el.innerHTML = "";
+  const cols = ["#1d40e6", "#7c9bff", "#ffffff", "#ffd36e", "#c77cff", "#7cffd8"];
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement("span"), a = Math.random() * Math.PI * 2, d = 120 + Math.random() * 220, s = 5 + Math.random() * 6;
+    c.className = "cf";
+    c.style.cssText = `width:${s}px;height:${s * (Math.random() > .5 ? 1 : .45)}px;border-radius:${Math.random() > .5 ? "50%" : "2px"};background:${cols[i % cols.length]};
+      --dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d * .7 + 50}px;--rot:${200 + Math.random() * 500}deg;--dur:${1.1 + Math.random() * .7}s;--del:${Math.random() * .15}s`;
+    el.appendChild(c);
+  }
 }
 
-function renderShareCard(reward) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 640;
-  canvas.height = 800;
+/* card tilt after the flip */
+$("cardScene").addEventListener("pointermove", e => {
+  const c = $("gCard"); if (!c.classList.contains("shown")) return;
+  const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5;
+  c.style.transform = `rotateX(${14 - py * 18}deg) rotateY(${-16 + px * 26}deg) rotateZ(4deg)`;
+});
+$("cardScene").addEventListener("pointerleave", () => { $("gCard").style.transform = ""; });
 
-  const ctx = canvas.getContext("2d");
+/* phone tilt */
+$("s4").addEventListener("pointermove", e => {
+  const px = e.clientX / W - .5, py = e.clientY / H - .5;
+  $("phone").style.transform = `rotateY(${-18 + px * 14}deg) rotateX(${6 - py * 8}deg) rotateZ(4deg)`;
+});
+$("useNow").addEventListener("click", () => { const b = $("useNow"); b.classList.add("done"); b.textContent = "Added to your next order ✓"; tone(880, .25, "triangle", .08); });
 
-  const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  bg.addColorStop(0, "#c4d4ff");
-  bg.addColorStop(1, "#f3f7ff");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  const cardX = 48;
-  const cardY = 140;
-  const cardW = canvas.width - cardX * 2;
-  const cardH = 520;
-
-  ctx.save();
-  ctx.shadowColor = "rgba(37,80,216,.28)";
-  ctx.shadowBlur = 60;
-  ctx.shadowOffsetY = 30;
-  roundRectPath(ctx, cardX, cardY, cardW, cardH, 40);
-  ctx.fillStyle = "rgba(255,255,255,.94)";
-  ctx.fill();
-  ctx.restore();
-
-  const cx = canvas.width / 2;
-
-  ctx.fillStyle = rarityBadgeColor(reward.rarity);
-  roundRectPath(ctx, cx - 74, cardY + 30, 148, 34, 17);
-  ctx.fill();
-  ctx.fillStyle = "#fff";
-  ctx.font = "700 14px sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText(reward.rarity.toUpperCase(), cx, cardY + 53);
-
-  drawRewardIcon(ctx, reward.icon, cx, cardY + 165, 110);
-
-  ctx.fillStyle = "#0b1680";
-  ctx.font = "800 32px sans-serif";
-  ctx.fillText(reward.name, cx, cardY + 275);
-
-  ctx.fillStyle = "#5a6a9a";
-  ctx.font = "500 19px sans-serif";
-  ctx.fillText(reward.sub, cx, cardY + 308);
-
-  ctx.fillStyle = "#8898c0";
-  ctx.font = "400 15px sans-serif";
-  ctx.fillText(reward.valid, cx, cardY + 340);
-
-  ctx.fillStyle = "#2550d8";
-  ctx.font = "700 17px sans-serif";
-  ctx.fillText("luckin coffee · #BrewYourLuck", cx, cardY + cardH - 34);
-
-  return canvas;
-}
-
-function shareCardBlob(callback) {
-  const canvas = renderShareCard(currentReward);
-  canvas.toBlob(callback, "image/png");
-}
-
-function downloadCard() {
-  shareCardBlob(blob => {
-    if (!blob) return;
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "luckin-my-luck.png";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-    showToast("Saved to your device");
+/* ---------- SHARE FAN ---------- */
+let sel = 1;
+function layoutFan() {
+  document.querySelectorAll(".fc").forEach(c => {
+    const i = +c.dataset.i, d = (i - sel + 3) % 3;
+    c.dataset.pos = d === 0 ? "c" : d === 1 ? "r" : "l";
   });
 }
+document.querySelectorAll(".fc").forEach(c => c.addEventListener("click", () => { sel = +c.dataset.i; layoutFan(); tone(620, .1, "sine", .08); }));
+layoutFan();
 
-async function shareCard() {
-  shareCardBlob(async blob => {
-    if (!blob) return;
-
-    const file = new File([blob], "luckin-my-luck.png", { type: "image/png" });
-
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try {
-        await navigator.share({
-          files: [file],
-          title: "Luckin Coffee",
-          text: `I just unlocked ${currentReward.name} on Luckin Coffee! #BrewYourLuck`
-        });
-        return;
-      } catch (err) {
-        return;
-      }
-    }
-
-    downloadCard();
-  });
+function roundRect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function renderShare() {
+  const sc = SHARE_CARDS[sel], cvs = document.createElement("canvas");
+  cvs.width = 1080; cvs.height = 1350;
+  const c = cvs.getContext("2d");
+  const bg = c.createLinearGradient(0, 0, 1080, 1350); bg.addColorStop(0, "#f6f8ff"); bg.addColorStop(1, "#dfe7ff");
+  c.fillStyle = bg; c.fillRect(0, 0, 1080, 1350);
+  c.save(); c.shadowColor = "rgba(10,20,90,.35)"; c.shadowBlur = 80; c.shadowOffsetY = 40;
+  roundRect(c, 150, 170, 780, 975, 54);
+  const g = c.createLinearGradient(150, 170, 930, 1145); g.addColorStop(0, sc.c1); g.addColorStop(.5, sc.c2); g.addColorStop(1, sc.c3);
+  c.fillStyle = g; c.fill(); c.restore();
+  c.save(); roundRect(c, 150, 170, 780, 975, 54); c.clip();
+  for (let i = 0; i < 9; i++) { const cg = c.createRadialGradient(200 + Math.random() * 700, 220 + Math.random() * 880, 0, 540, 650, 260); cg.addColorStop(0, "rgba(255,255,255,.18)"); cg.addColorStop(1, "rgba(255,255,255,0)"); c.fillStyle = cg; c.fillRect(150, 170, 780, 975); }
+  c.restore();
+  c.fillStyle = "#fff"; c.textAlign = "center";
+  c.font = "600 74px Inter, sans-serif";
+  sc.title.forEach((l, i) => c.fillText(l, 540, 340 + i * 86));
+  c.font = "500 24px Inter, sans-serif"; c.globalAlpha = .85;
+  c.fillText("SOMETHING SWEET WAS WAITING.", 540, 340 + sc.title.length * 86 + 20);
+  c.globalAlpha = 1;
+  roundRect(c, 260, 720, 560, 200, 30); c.fillStyle = "rgba(255,255,255,.16)"; c.fill();
+  c.font = "700 46px Inter, sans-serif"; c.fillText(current.name, 540, 805);
+  c.font = "400 28px Inter, sans-serif"; c.globalAlpha = .85; c.fillText(`${current.sub} · ${current.valid}`, 540, 862); c.globalAlpha = 1;
+  c.font = "700 30px Inter, sans-serif"; c.fillText("luckin coffee  ·  #BrewYourLuck", 540, 1080);
+  return cvs;
 }
-
-function shareToX() {
-  const text = encodeURIComponent(
-    `I just unlocked ${currentReward.name} on Luckin Coffee! #BrewYourLuck`
-  );
-  const url = encodeURIComponent(location.href);
-
-  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, "_blank", "noopener");
+let toastT;
+function toast(m) { const el = $("toast"); el.textContent = m; el.classList.add("is-visible"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("is-visible"), 2200); }
+const shareText = () => `I just unlocked ${current.name} on Luckin Coffee! #BrewYourLuck`;
+function download() {
+  renderShare().toBlob(b => { if (!b) return; const u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = "luckin-my-luck.png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); toast("Saved to your device"); });
 }
+$("socDownload").addEventListener("click", download);
+$("socShare").addEventListener("click", () => renderShare().toBlob(async b => {
+  const f = b && new File([b], "luckin-my-luck.png", { type: "image/png" });
+  if (f && navigator.canShare && navigator.canShare({ files: [f] })) { try { await navigator.share({ files: [f], title: "Luckin Coffee", text: shareText() }); } catch (e) {} return; }
+  download();
+}));
+$("socX").addEventListener("click", () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText())}&url=${encodeURIComponent(location.href)}`, "_blank", "noopener"));
+$("socMore").addEventListener("click", async () => {
+  const txt = `${shareText()} ${location.href}`;
+  if (navigator.share) { try { await navigator.share({ title: "Luckin Coffee", text: txt }); } catch (e) {} return; }
+  try { await navigator.clipboard.writeText(txt); toast("Copied to clipboard"); } catch (e) { toast("Copy failed"); }
+});
 
-async function shareMore() {
-  const text = `I just unlocked ${currentReward.name} on Luckin Coffee! #BrewYourLuck ${location.href}`;
+/* ---------- WIRING ---------- */
+$("tapBtn").addEventListener("click", brew);
+$("cloverBtn").addEventListener("click", brew);
+$("claimBtn").addEventListener("click", () => go("s4"));
+$("tryAgainBtn").addEventListener("click", () => { go("s2"); brewing = true; runBrew(); });
+$("toShareBtn").addEventListener("click", () => go("s5"));
+$("againBtn").addEventListener("click", () => go("s1"));
+$("storeA").addEventListener("click", e => { e.preventDefault(); toast("Opening the App Store…"); });
+$("storeG").addEventListener("click", e => { e.preventDefault(); toast("Opening Google Play…"); });
 
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: "Luckin Coffee", text });
-      return;
-    } catch (err) {
-      return;
-    }
-  }
+/* hold to stir faster */
+const s2 = $("s2");
+s2.addEventListener("pointerdown", () => { holding = true; s2.classList.add("holding"); });
+["pointerup", "pointerleave", "pointercancel"].forEach(ev => s2.addEventListener(ev, () => { holding = false; s2.classList.remove("holding"); }));
 
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast("Copied to clipboard");
-  } catch (err) {
-    showToast("Copy failed");
-  }
-}
+/* scroll / swipe down on the entry scene starts brewing */
+let touchY = null;
+$("s1").addEventListener("wheel", e => { if (e.deltaY > 30) brew(); }, { passive: true });
+$("s1").addEventListener("touchstart", e => { touchY = e.touches[0].clientY; }, { passive: true });
+$("s1").addEventListener("touchend", e => { if (touchY !== null && touchY - e.changedTouches[0].clientY > 50) brew(); touchY = null; });
+addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && document.body.dataset.scene === "s1") { e.preventDefault(); brew(); } });
 
-const socShare = document.getElementById("socShare");
-const socX = document.getElementById("socX");
-const socDownload = document.getElementById("socDownload");
-const socMore = document.getElementById("socMore");
-
-if (socShare) socShare.addEventListener("click", shareCard);
-if (socX) socX.addEventListener("click", shareToX);
-if (socDownload) socDownload.addEventListener("click", downloadCard);
-if (socMore) socMore.addEventListener("click", shareMore);
+buildClover($("clover"));
+buildClover($("cardClover"), true);
+loop();
