@@ -100,15 +100,25 @@ function tone(freq, dur, type = "sine", peak = .12) {
 }
 const chime = r => (r === "epic" ? [660, 880, 1320] : r === "rare" ? [560, 840] : [520, 720]).forEach((f, i) => setTimeout(() => tone(f, .4, "triangle", .1), i * 90));
 
-/* ---------- FX CANVAS ---------- */
+/* ---------- FX CANVASES ----------
+   fx     : water surface (ripples, shadows, motes)
+   liquid : blue liquid blobs, merged into one fluid body (metaball field, thresholded at low resolution)
+   glint  : white highlights and droplet specks drawn on top of the fluid */
 const cv = $("fx"), ctx = cv.getContext("2d");
+const lq = $("liquid"), lctx = lq.getContext("2d");
+const gl = $("glint"), gctx = gl.getContext("2d");
 let W = 0, H = 0, DPR = 1, mode = "ripple", t = 0, extraRings = [];
+const field = document.createElement("canvas"), fctx = field.getContext("2d", { willReadFrequently: true });
+const colr = document.createElement("canvas"), cctx = colr.getContext("2d", { willReadFrequently: true });
+const outc = document.createElement("canvas"), octx = outc.getContext("2d");
+let S = 3, FW = 1, FH = 1, outImg = null;
 function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   W = innerWidth; H = innerHeight;
-  cv.width = W * DPR; cv.height = H * DPR;
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  if (mode === "vortex") { ctx.fillStyle = "#f3f6ff"; ctx.fillRect(0, 0, W, H); }
+  S = W < 700 ? 2 : 3; FW = Math.ceil(W / S); FH = Math.ceil(H / S);
+  [field, colr, outc].forEach(c => { c.width = FW; c.height = FH; });
+  outImg = octx.createImageData(FW, FH);
+  [[cv, ctx, DPR], [lq, lctx, DPR], [gl, gctx, DPR]].forEach(([c, x, d]) => { c.width = W * d; c.height = H * d; x.setTransform(d, 0, 0, d, 0, 0); });
 }
 addEventListener("resize", resize); resize();
 
@@ -117,89 +127,155 @@ function cloverAnchor() {
   return { x: r.left + r.width / 2, y: r.top + r.height * .86, s: r.width };
 }
 
-/* 01 — water ripples under the clover */
-function drawRipple() {
-  ctx.clearRect(0, 0, W, H);
-  const { x, y, s } = cloverAnchor();
-  const maxR = Math.max(W, H) * .75;
-  const glow = ctx.createRadialGradient(x, y, 0, x, y, s * .9);
-  glow.addColorStop(0, "rgba(120,150,255,.22)"); glow.addColorStop(1, "rgba(120,150,255,0)");
-  ctx.fillStyle = glow; ctx.beginPath(); ctx.ellipse(x, y, s * .9, s * .32, 0, 0, Math.PI * 2); ctx.fill();
-
+/* concentric water rings seen in perspective: white crest + soft blue trough */
+function waterRings(x, y, maxR, flat, alpha, n = 9, speed = .0016) {
   const ring = (rx, a, w = 1.4) => {
-    const ry = rx * .26;
+    const ry = rx * flat;
     ctx.lineWidth = w;
     ctx.strokeStyle = `rgba(255,255,255,${a})`;
     ctx.beginPath(); ctx.ellipse(x, y - 1, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.strokeStyle = `rgba(70,100,210,${a * .45})`;
     ctx.beginPath(); ctx.ellipse(x, y + 1.6, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
   };
-  const n = 9;
   for (let i = 0; i < n; i++) {
-    const ph = ((t * .0016) + i / n) % 1;
-    const rx = 40 + ph * maxR;
-    ring(rx, Math.pow(1 - ph, 1.6) * .9);
+    const ph = ((t * speed) + i / n) % 1;
+    ring(40 + ph * maxR, Math.pow(1 - ph, 1.6) * alpha);
   }
+  return ring;
+}
+
+/* 01 — water ripples under the clover */
+function drawRipple() {
+  ctx.clearRect(0, 0, W, H);
+  const { x, y, s } = cloverAnchor();
+  const maxR = Math.max(W, H) * .75;
+  const glow = ctx.createRadialGradient(x, y, 0, x, y, s * .9);
+  glow.addColorStop(0, "rgba(120,150,255,.24)"); glow.addColorStop(1, "rgba(120,150,255,0)");
+  ctx.fillStyle = glow; ctx.beginPath(); ctx.ellipse(x, y, s * .9, s * .32, 0, 0, Math.PI * 2); ctx.fill();
+  const ring = waterRings(x, y, maxR, .26, .9);
   extraRings = extraRings.filter(r => (r.p += .012) < 1);
   extraRings.forEach(r => r.p > 0 && ring(30 + r.p * maxR * .8, (1 - r.p) * 1.2, 2.2));
 }
 
 /* 02 — liquid vortex */
-let parts = [], drops = [], hold = 0, holding = false, ringScale = .55;
+let blobs = [], spray = [], hold = 0, holding = false, grow = .4;
 function gauss() { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+const mix = (a, b, f) => a.map((v, i) => Math.round(v + (b[i] - v) * f));
+const BACK = [128, 158, 255], FRONT = [20, 50, 214], DEEP = [9, 24, 140], LIGHT = [182, 202, 255];
 function initVortex() {
-  parts = Array.from({ length: W < 700 ? 900 : 1500 }, () => ({
+  const n = W < 700 ? 240 : 380;
+  blobs = Array.from({ length: n }, (_, i) => ({
     a: Math.random() * Math.PI * 2,
-    r: 1 + gauss() * .09,
-    sp: .006 + Math.random() * .006,
-    w: 1.2 + Math.random() * 4,
-    hi: Math.random() < .14,
+    d: gauss() * .055,
+    inner: i % 5 === 0,
+    sz: 9 + Math.random() * 16,
+    sp: .011 + Math.random() * .006,
     ph: Math.random() * 6.28,
-    px: null, py: null
+    tone: Math.random()
   }));
-  drops = []; ringScale = .55;
-  ctx.fillStyle = "#f3f6ff"; ctx.fillRect(0, 0, W, H);
+  spray = []; grow = .4;
+  lctx.clearRect(0, 0, W, H); gctx.clearRect(0, 0, W, H);
+}
+function vortexGeom() {
+  const cx = W / 2, cy = H / 2 + (W < 700 ? 40 : 14);
+  const R = Math.min(W * (W < 700 ? .42 : .36), H * .74, 580) * grow * (1 - hold * .05);
+  return { cx, cy, R, k: W < 700 ? .62 : .4 };
+}
+function pos(b, g) {
+  const { cx, cy, R, k } = g;
+  const wave = Math.sin(3 * b.a - t * .045 + b.ph) * .045 + Math.sin(7 * b.a + t * .03) * .02 * (1 + hold);
+  const rr = R * ((b.inner ? .86 : 1) + b.d + wave);
+  const lift = (Math.sin(2 * b.a + t * .05 + b.ph) * .5 + .5) * R * .06 * (1 + hold * .8);
+  return [cx + Math.cos(b.a) * rr, cy + Math.sin(b.a) * rr * k - lift];
 }
 function drawVortex() {
-  hold += ((holding ? 1 : 0) - hold) * .06;
-  ringScale += (1 - ringScale) * .02;
-  ctx.fillStyle = "rgba(243,246,255,.16)"; ctx.fillRect(0, 0, W, H);
-  const cx = W / 2, cy = H / 2 + (W < 700 ? 40 : 10);
-  const R = Math.min(W * (W < 700 ? .46 : .4), H * .78, 640) * ringScale, k = W < 700 ? .72 : .42;
-  /* soft liquid body under the strokes */
-  ctx.save(); ctx.translate(cx, cy); ctx.scale(1, k);
-  const band = ctx.createRadialGradient(0, 0, R * .78, 0, 0, R * 1.2);
-  band.addColorStop(0, "rgba(60,100,240,0)"); band.addColorStop(.45, "rgba(40,80,235,.05)"); band.addColorStop(1, "rgba(60,100,240,0)");
-  ctx.fillStyle = band; ctx.beginPath(); ctx.arc(0, 0, R * 1.2, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-  const boost = 1 + hold * 1.8;
-  ctx.lineCap = "round";
-  for (const p of parts) {
-    p.a += p.sp * boost / p.r;
-    const wob = Math.sin(p.a * 3 + t * .03 + p.ph) * .035 + Math.sin(p.a * 7 - t * .02) * .015;
-    const rr = R * (p.r + wob);
-    const x = cx + Math.cos(p.a) * rr, y = cy + Math.sin(p.a) * rr * k + Math.sin(p.a * 2 + p.ph) * 6;
-    if (p.px !== null) {
-      const front = Math.sin(p.a) > 0;
-      const d = Math.abs(p.r - 1) * 8;
-      ctx.strokeStyle = p.hi ? `rgba(255,255,255,${.75 - d * .2})`
-        : front ? `rgba(${18 + d * 40},${40 + d * 60},${200 + d * 20},${.5 - d * .12})`
-                : `rgba(${70 + d * 50},${110 + d * 50},${235},${.32 - d * .08})`;
-      ctx.lineWidth = p.w * (front ? 1.15 : .8);
-      ctx.beginPath(); ctx.moveTo(p.px, p.py); ctx.lineTo(x, y); ctx.stroke();
-    }
-    p.px = x; p.py = y;
-    if (Math.random() < .0009 * boost) {
-      const out = .6 + Math.random();
-      drops.push({ x, y, vx: -Math.sin(p.a) * out * 3 + Math.cos(p.a) * out * 2, vy: -1.5 - Math.random() * 3, r: 1.5 + Math.random() * 3.5, life: 1 });
+  hold += ((holding ? 1 : 0) - hold) * .06 * dtf;
+  grow += (1 - grow) * .045 * dtf;
+  const g = vortexGeom(), { cx, cy, R, k } = g, boost = 1 + hold * 1.6;
+
+  /* water surface + contact shadow */
+  ctx.clearRect(0, 0, W, H);
+  waterRings(cx, cy + R * k * .2, Math.max(W, H) * .8, k * .7, .55, 7, .0022 * boost);
+  ctx.save(); ctx.translate(cx, cy + R * k * .35); ctx.scale(1, k);
+  const sh = ctx.createRadialGradient(0, 0, R * .5, 0, 0, R * 1.25);
+  sh.addColorStop(0, "rgba(40,70,200,0)"); sh.addColorStop(.6, "rgba(40,70,200,.10)"); sh.addColorStop(1, "rgba(40,70,200,0)");
+  ctx.fillStyle = sh; ctx.beginPath(); ctx.arc(0, 0, R * 1.25, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+
+  /* fluid body — metaballs: blobs add up into a smooth field, which is thresholded and lit per pixel
+     (normal from the field gradient → diffuse + specular), at 1/S resolution, then scaled up */
+  fctx.clearRect(0, 0, FW, FH);
+  fctx.globalCompositeOperation = "lighter";
+  const blob = (x, y, r) => {
+    const X = x / S, Y = y / S, Rr = r / S * 2.3;
+    const gr = fctx.createRadialGradient(X, Y, 0, X, Y, Rr);
+    gr.addColorStop(0, "rgba(0,0,0,.42)"); gr.addColorStop(.45, "rgba(0,0,0,.22)"); gr.addColorStop(1, "rgba(0,0,0,0)");
+    fctx.fillStyle = gr; fctx.beginPath(); fctx.arc(X, Y, Rr, 0, Math.PI * 2); fctx.fill();
+  };
+  blobs.forEach(b => { b.a += b.sp * boost * (b.inner ? 1.25 : 1) * dtf; b.y = Math.sin(b.a); });
+  for (const b of blobs) {
+    const [x, y] = pos(b, g);
+    const front = (b.y + 1) / 2;
+    blob(x, y, Math.max(b.sz * Math.pow(R / 420, .7) * (.85 + front * .45) * (b.inner ? .72 : 1), 2.5));
+    if (Math.random() < .0016 * boost * boost * dtf && front > .35) {
+      const v = 2 + Math.random() * 3 * boost;
+      spray.push({ x, y, vx: -Math.sin(b.a) * v + Math.cos(b.a) * 1.6, vy: Math.cos(b.a) * k * v - 2.5 - Math.random() * 3, r: 5 + Math.random() * 7 });
     }
   }
-  drops = drops.filter(d => (d.life -= .012) > 0);
-  for (const d of drops) {
-    d.x += d.vx; d.y += d.vy; d.vy += .12;
-    ctx.fillStyle = `rgba(40,80,230,${d.life * .7})`;
-    ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = `rgba(255,255,255,${d.life * .9})`;
-    ctx.beginPath(); ctx.arc(d.x - d.r * .35, d.y - d.r * .35, d.r * .35, 0, Math.PI * 2); ctx.fill();
+  spray = spray.filter(d => d.r > 1.6 && d.y < H + 40);
+  for (const d of spray) {
+    d.x += d.vx * dtf; d.y += d.vy * dtf; d.vy += .16 * dtf; d.r *= Math.pow(.985, dtf);
+    blob(d.x, d.y, d.r);
+  }
+  fctx.globalCompositeOperation = "source-over";
+
+  const fa = fctx.getImageData(0, 0, FW, FH).data, od = outImg.data;
+  const TH = .5, ccy = cy / S, span = Math.max(R * k / S, 1);
+  const Lx = -.45, Ly = -.72, Lz = .53, Hx = Lx, Hy = Ly, Hz = Lz + 1, Hn = Math.hypot(Hx, Hy, Hz);
+  for (let py = 1; py < FH - 1; py++) {
+    const depth = Math.min(Math.max((py - ccy) / span, -1), 1) * .5 + .5;
+    const br = BACK[0] + (FRONT[0] - BACK[0]) * depth, bg = BACK[1] + (FRONT[1] - BACK[1]) * depth, bb = BACK[2] + (FRONT[2] - BACK[2]) * depth;
+    for (let px = 1; px < FW - 1; px++) {
+      const i = (py * FW + px) * 4, f = fa[i + 3] / 255;
+      if (f < TH - .06) { od[i + 3] = 0; continue; }
+      const gx = (fa[i + 7] - fa[i - 1]) / 255, gy = (fa[i + FW * 4 + 3] - fa[i - FW * 4 + 3]) / 255;
+      let nx = -gx * 3.2, ny = -gy * 3.2, nz = 1; const nl = Math.hypot(nx, ny, nz); nx /= nl; ny /= nl; nz /= nl;
+      const dif = Math.max(0, nx * Lx + ny * Ly + nz * Lz);
+      const sp = Math.pow(Math.max(0, (nx * Hx + ny * Hy + nz * Hz) / Hn), 38);
+      const rim = 1 - Math.min(1, (f - TH + .06) / .3);
+      const sh = .5 + dif * .75;
+      od[i]     = Math.min(255, br * sh + rim * 70 + sp * 255);
+      od[i + 1] = Math.min(255, bg * sh + rim * 80 + sp * 255);
+      od[i + 2] = Math.min(255, bb * sh + rim * 40 + sp * 255);
+      const o = Math.min(1, (f - TH + .06) / .08);
+      od[i + 3] = (o * o * (3 - 2 * o)) * (225 + 30 * (1 - rim));
+    }
+  }
+  octx.putImageData(outImg, 0, 0);
+  lctx.clearRect(0, 0, W, H);
+  lctx.imageSmoothingEnabled = true; lctx.imageSmoothingQuality = "high";
+  lctx.filter = "blur(.8px)"; lctx.drawImage(outc, 0, 0, W, H); lctx.filter = "none";
+
+  /* highlights on top: travelling glints along the crest, a darker lip in front, specks on droplets */
+  gctx.clearRect(0, 0, W, H);
+  gctx.lineCap = "round";
+  const arc = (r0, a0, len, w, style, blur) => {
+    gctx.filter = blur ? `blur(${blur}px)` : "none";
+    gctx.strokeStyle = style; gctx.lineWidth = w; gctx.beginPath();
+    for (let i = 0; i <= 24; i++) {
+      const a = a0 + len * i / 24;
+      const wave = Math.sin(3 * a - t * .045) * .045;
+      const x = cx + Math.cos(a) * R * (r0 + wave), y = cy + Math.sin(a) * R * (r0 + wave) * k - R * .03;
+      i ? gctx.lineTo(x, y) : gctx.moveTo(x, y);
+    }
+    gctx.stroke();
+  };
+  const spin = t * .012 * boost;
+  for (let i = 0; i < 5; i++) arc(.98, spin + i * 1.256, .4, 2.2, "rgba(255,255,255,.7)", 1);
+  for (let i = 0; i < 4; i++) arc(1.04, -spin * .8 + i * 1.57 + .5, .28, 1.2, "rgba(255,255,255,.5)", .5);
+  gctx.filter = "none";
+  for (const d of spray) {
+    gctx.fillStyle = "rgba(255,255,255,.9)";
+    gctx.beginPath(); gctx.arc(d.x - d.r * .3, d.y - d.r * .35, Math.max(d.r * .28, .8), 0, Math.PI * 2); gctx.fill();
   }
 }
 
@@ -219,8 +295,10 @@ function drawMotes() {
   }
 }
 
-function loop() {
-  t++;
+let lastT = performance.now(), dtf = 1;
+function loop(now = performance.now()) {
+  dtf = Math.min((now - lastT) / 16.67, 3); lastT = now;
+  t += dtf;
   if (mode === "ripple") drawRipple();
   else if (mode === "vortex") drawVortex();
   else drawMotes();
@@ -233,11 +311,15 @@ function go(id) {
   document.querySelectorAll(".scr").forEach(s => s.classList.toggle("active", s.id === id));
   document.body.dataset.scene = id;
   const [n, l] = TAGS[id];
-  $("sceneTag").innerHTML = `<b>${n}</b><span>${l}</span>`;
+  $("sceneTag").innerHTML = `<b>${n}<em>/05</em></b><span>${l}</span>`;
   const idx = Object.keys(TAGS).indexOf(id);
   document.querySelectorAll("#steps i").forEach((d, i) => d.classList.toggle("on", i === idx));
   const m = id === "s1" ? "ripple" : id === "s2" ? "vortex" : "motes";
-  if (m !== mode) { mode = m; if (m === "vortex") initVortex(); if (m === "motes") initMotes(); if (m === "ripple") ctx.clearRect(0, 0, W, H); }
+  if (m !== mode) {
+    mode = m; ctx.clearRect(0, 0, W, H);
+    if (m !== "vortex") { lctx.clearRect(0, 0, W, H); gctx.clearRect(0, 0, W, H); }
+    if (m === "vortex") initVortex(); if (m === "motes") initMotes();
+  }
 }
 
 let current = REWARDS[0], brewTimer = null, brewing = false;

@@ -13,6 +13,8 @@
 
   <!-- shared water / liquid canvas -->
   <canvas id="fx" class="fx" aria-hidden="true"></canvas>
+  <canvas id="liquid" class="fx liquid" aria-hidden="true"></canvas>
+  <canvas id="glint" class="fx glint" aria-hidden="true"></canvas>
 
   <header class="top">
     <a class="brand" href="./index.html" aria-label="luckin coffee home">
@@ -32,6 +34,7 @@
     <div class="s1-grid">
       <div class="s1-copy">
         <h1 class="big">You’re<br />missing<br />your luck.</h1>
+        <p class="lede">A lucky reward is waiting in this cup.<br />Only for the ones who brew it first.</p>
         <button class="tap" id="tapBtn" type="button">
           <span>Tap to brew it.</span>
           <i class="caret">∨</i>
@@ -41,8 +44,17 @@
       <button class="clover-btn" id="cloverBtn" type="button" aria-label="Brew my luck">
         <span class="clover-shadow"></span>
         <svg class="clover" id="clover" viewBox="-200 -200 400 400" aria-hidden="true"></svg>
+        <span class="bead" style="--x:8%;--y:20%;--s:16px;--d:0s"></span>
+        <span class="bead" style="--x:88%;--y:14%;--s:10px;--d:-1.2s"></span>
+        <span class="bead" style="--x:94%;--y:58%;--s:20px;--d:-2.4s"></span>
+        <span class="bead" style="--x:4%;--y:66%;--s:9px;--d:-3.1s"></span>
+        <span class="bead" style="--x:74%;--y:90%;--s:7px;--d:-.6s"></span>
       </button>
     </div>
+
+    <ol class="how" aria-label="How it works">
+      <li><b>01</b>Scan</li><li><b>02</b>Brew</li><li><b>03</b>Reveal</li><li><b>04</b>Claim</li>
+    </ol>
 
     <div class="scroll-cue" aria-hidden="true"><span class="mouse"></span><em>SCROLL</em><i></i></div>
   </section>
@@ -61,6 +73,7 @@
   <section class="scr" id="s3" aria-label="Reveal">
     <div class="split">
       <div class="copy">
+        <p class="kicker">Your reward</p>
         <h2 class="unlock">LUCK<br />UNLOCKED</h2>
         <p class="unlock-sub">Something sweet<br />was waiting.</p>
         <div class="cta-col">
@@ -88,6 +101,10 @@
             </div>
           </div>
         </div>
+        <span class="bead" style="--x:-4%;--y:12%;--s:22px;--d:-1s"></span>
+        <span class="bead" style="--x:102%;--y:26%;--s:14px;--d:-2s"></span>
+        <span class="bead" style="--x:96%;--y:92%;--s:26px;--d:-3s"></span>
+        <span class="bead" style="--x:6%;--y:98%;--s:10px;--d:0s"></span>
         <div class="sparks" id="sparksEl"></div>
         <div class="confetti" id="confettiEl"></div>
       </div>
@@ -98,6 +115,7 @@
   <section class="scr" id="s4" aria-label="Claim">
     <div class="split">
       <div class="copy">
+        <p class="kicker">Claim it</p>
         <h2 class="mid">Your luck lives<br />in the Luckin app.</h2>
         <p class="mid-sub">Download the app<br />to claim your reward.</p>
         <div class="stores">
@@ -130,7 +148,10 @@
               </div>
               <button class="ps-use" type="button" id="useNow">Use Now</button>
               <div class="ps-row"><span>Vouchers</span><span>View all</span></div>
-              <div class="ps-mini"><i></i><i></i></div>
+              <ul class="ps-list">
+                <li><i class="v1"></i><span><b>2 Available</b>Coupons ready to use</span><em>›</em></li>
+                <li><i class="v2"></i><span><b>Luck Stamps</b>3 / 10 collected</span><em>›</em></li>
+              </ul>
             </div>
             <nav class="ps-tab">
               <span><i class="t1"></i>Order</span>
@@ -147,6 +168,7 @@
   <section class="scr" id="s5" aria-label="Share">
     <div class="split">
       <div class="copy">
+        <p class="kicker">Pass it on</p>
         <h2 class="mid">Share your luck.</h2>
         <p class="mid-sub dark">Good luck looks better<br />when we share.</p>
         <span class="tag">#BrewYourLuck</span>
