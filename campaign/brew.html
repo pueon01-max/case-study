@@ -11,10 +11,8 @@
 </head>
 <body data-scene="s1">
 
-  <!-- shared water / liquid canvas -->
-  <canvas id="fx" class="fx" aria-hidden="true"></canvas>
-  <canvas id="liquid" class="fx liquid" aria-hidden="true"></canvas>
-  <canvas id="glint" class="fx glint" aria-hidden="true"></canvas>
+  <!-- real-time liquid (WebGL): clover, vortex and water surface -->
+  <canvas id="water" class="fx" aria-hidden="true"></canvas>
 
   <header class="top">
     <a class="brand" href="./index.html" aria-label="luckin coffee home">
@@ -218,6 +216,7 @@
 
   <div class="toast" id="toast"></div>
 
+  <script src="./water.js"></script>
   <script src="./brew.js"></script>
 </body>
 </html>

@@ -369,3 +369,28 @@ body:not([data-scene="s1"]) .scene-tag { opacity: 1; }
 @media (max-width: 820px) {
   .hold-hint { position: fixed; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 58px); margin: 0; }
 }
+
+/* ---------- WEBGL LIQUID ----------
+   When water.js is running, the 3D clover/vortex/water replace the SVG clover and the 2D canvases. */
+#water { z-index: 0; background: #f3f6ff; }
+.gl .clover, .gl .clover-shadow, .gl #s1 .bead { opacity: 0; }
+.gl .clover-btn { border-radius: 50%; }
+.gl .clover-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 8px; }
+.no-gl #water { display: none; }
+
+/* 01 — closer to mockup 2: headline, a quiet "Tap to brew it.", nothing else competing with the clover */
+.gl #s1 .lede, .gl #s1 .how { display: none; }
+.gl #s1 .tap { background: none; border: 0; box-shadow: none; backdrop-filter: none; padding: 10px 2px; flex-direction: column; align-items: flex-start; gap: 10px; font-weight: 500; font-size: 15px; }
+.gl #s1 .tap .caret { margin-left: 40px; }
+.gl .clover-btn { width: min(500px, 100%); }
+.s1-copy { position: relative; z-index: 2; }
+
+/* 02 — the deer and copy sit inside the vortex */
+.gl .brew-center { margin-top: 2vh; }
+.gl .brew-h2 { text-shadow: 0 2px 18px rgba(255,255,255,.9); }
+
+@media (max-width: 820px) {
+  .gl #s1 .tap { align-items: center; margin-left: auto; margin-right: auto; }
+  .gl #s1 .tap .caret { margin-left: 0; }
+  .gl .clover-btn { width: min(330px, 82vw); }
+}
