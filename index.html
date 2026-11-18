@@ -463,6 +463,194 @@ sup.fn{font-size:15px;vertical-align:super;margin-left:3px;opacity:.6;font-weigh
 .ctxt .cp dd{margin:0;opacity:.8}
 @media (max-width:900px){.why3,.cities{grid-template-columns:1fr}.cstage{padding-inline:18%}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{opacity:1;transform:none}.reveal-text .w{color:var(--sol-ink)}}
+
+/* archive — raw sources from the working file (optional per case) */
+.arc-note{max-width:720px;margin:48px auto 0;padding:clamp(22px,4vw,36px);border-radius:22px;background:var(--b-glass,rgba(255,255,255,.66));border:1px solid var(--b-gline,#fff);font-size:16px;line-height:1.85;word-break:keep-all;text-align:left}
+.arc-note p{margin:0 0 1em}.arc-note p:last-child{margin:0}
+.arc-k{font-size:13px;font-weight:600;color:var(--b-hi);letter-spacing:.04em}
+.arc-g{margin-top:clamp(48px,6vw,72px)}
+.arc-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--b-line);padding-bottom:12px}
+.arc-h b{font-size:20px;font-weight:600}.arc-h span{font-size:14px;color:var(--b-mute);flex:1;min-width:200px}
+.arc-h i{font-style:normal;font-size:13px;font-weight:600;color:var(--b-hi);font-variant-numeric:tabular-nums}
+.arc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:16px}
+.arc-it{display:block;padding:0;border:1px solid var(--b-line);border-radius:10px;overflow:hidden;background:var(--b-card);cursor:zoom-in;aspect-ratio:4/3}
+.arc-it img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s}
+.arc-it:hover img{transform:scale(1.04)}
+.arc-lb{position:fixed;inset:0;z-index:90;background:rgba(5,8,20,.92);display:none;overflow:auto;padding:56px 20px 20px;cursor:zoom-out}
+.arc-lb.on{display:block}.arc-lb img{display:block;margin:0 auto;max-width:min(1400px,100%);border-radius:8px}
+.arc-lb button{position:fixed;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:0;background:#fff;font-size:20px;cursor:pointer}
+@media (max-width:520px){.arc-grid{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:reduce){.arc-it img{transition:none}}
+
+/* ── Type system (applies to every case) ─────────────────────────
+   One family (Pretendard). Four sizes do almost all the work:
+   display · title · lead · body, plus caption. Headings 600, reading text 400. */
+:root{
+  --t-display:clamp(54px,9.4vw,140px);
+  --t-title:clamp(32px,4.4vw,60px);
+  --t-sub:clamp(24px,2.6vw,34px);
+  --t-lead:clamp(18px,1.55vw,20px);
+  --t-body:16px;
+  --t-cap:13px;
+}
+body{word-break:keep-all;letter-spacing:-.015em}
+.h2,.reveal-text,.quote{font-size:var(--t-title);line-height:1.18;letter-spacing:-.035em;font-weight:600}
+.h2.sm{font-size:var(--t-title)}
+.tcol h3{font-size:var(--t-sub);line-height:1.25;letter-spacing:-.03em}
+.hero .sub,.lead,.rnote,.tcol .body,.intro .big{font-size:var(--t-lead);line-height:1.7;font-weight:400;letter-spacing:-.01em}
+.intro .big{max-width:34em}
+.tile p,.tile .note,.pill,.icard .pf,.spec3 dd,.cl span,.xgrid span,.clist span,.steps4 p,.proc p,.learn2 p,.gal figcaption span,.board figcaption,.dtable,.bars div{font-size:15px;line-height:1.65;font-weight:400}
+.spec3 .sol dd,.pill.f{font-weight:600}
+.eyebrow{font-size:14px}
+.eyebrow i,.chips-nav button i,.pill i,.icard .no,.steps4 .n,.gal figcaption .n,.proc .n,.spec3 dt i,.icard .x::before,.icard .o::before{font-size:12px}
+.specs dt,.spec3 dt,.dtable th,.tile .lbl,.learn2 .lbl,.shift3 .k,.xm,.slider .t,.steps4 em,.icons5 figcaption,.spec3 .evn,.icons-cap,.foot{font-size:var(--t-cap)}
+.cl b,.xgrid b,.clist b,.icard .kw,.shift3 b,.steps4 b,.gal figcaption b,.proc b,.fx .kwm,.diag-t,.specs dd,.facts b{font-size:18px;font-weight:600;line-height:1.35}
+
+/* ── Story layout (a case with c.story: making-of, told in order) ── */
+.sx{position:relative}
+.sx .wrap{max-width:1080px}
+.sx-head{display:grid;gap:18px;max-width:760px;justify-items:start}
+.sx-head .h2{margin:0}
+.sx-p{display:grid;gap:1em;max-width:40em;font-size:var(--t-lead);line-height:1.8;margin-top:26px}
+.sx-p p{margin:0}
+.rN .sx-p{color:color-mix(in srgb,var(--sol-ink) 82%,transparent)}
+.rB .sx-p{color:color-mix(in srgb,var(--b-ink) 82%,transparent)}
+.sx-b{margin-top:clamp(40px,5vw,64px)}
+.sx-cap{font-size:var(--t-cap);opacity:.6;margin-top:10px;line-height:1.5}
+.sx-img{border-radius:16px;overflow:hidden;background:rgba(127,127,127,.08);border:1px solid rgba(127,127,127,.18);cursor:zoom-in;padding:0;display:block;width:100%}
+.sx-img img{width:100%;display:block}
+.sx-grid{display:grid;gap:16px}
+.sx-grid.c1{grid-template-columns:1fr}.sx-grid.c3{grid-template-columns:repeat(3,1fr)}.sx-grid.c4{grid-template-columns:repeat(4,1fr)}.sx-grid.c2{grid-template-columns:1fr 1fr}
+.sx-grid figure{margin:0}
+/* equation */
+.sx-eq{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:14px;align-items:stretch}
+.sx-eq .op{align-self:center;font-size:28px;opacity:.4}
+.sx-eq div.card{border-radius:20px;padding:24px;background:var(--b-glass,#fff);border:1px solid var(--b-gline,#fff)}
+.sx-eq .card:last-child{background:var(--b-hi);color:#fff;border-color:transparent}
+.sx-eq .k{font-size:var(--t-cap);opacity:.65;display:block}
+.sx-eq b{display:block;font-size:var(--t-sub);letter-spacing:-.03em;line-height:1.15;margin:10px 0 6px}
+.sx-eq span{font-size:15px}
+/* stats */
+.sx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sx-stats div{border-radius:18px;padding:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.sx-stats b{display:block;font-size:clamp(34px,3.6vw,48px);font-weight:600;letter-spacing:-.04em;line-height:1;color:var(--sol-hi);font-variant-numeric:tabular-nums}
+.sx-stats span{display:block;margin-top:10px;font-size:14px;line-height:1.5;opacity:.75}
+.sx-table{width:100%;border-collapse:collapse;font-size:15px}
+.sx-table th{font-size:var(--t-cap);text-align:left;font-weight:600;opacity:.6;padding:0 14px 10px}
+.sx-table td{padding:14px;border-top:1px solid rgba(127,127,127,.25)}
+.sx-table td:first-child{font-weight:600}
+.sx-tw{overflow-x:auto}
+/* copy */
+.sx-copy{display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(28px,5vw,64px);align-items:center}
+.sx-copy s{display:block;font-size:var(--t-sub);opacity:.35;letter-spacing:-.03em}
+.sx-copy .main{display:block;font-size:clamp(40px,5.4vw,76px);font-weight:600;line-height:1.02;letter-spacing:-.045em;color:var(--b-hi);margin:10px 0 14px}
+.sx-copy .s2{font-size:15px;opacity:.6}
+.sx-copy p.t{font-size:var(--t-body);line-height:1.8;margin-top:22px;opacity:.85}
+/* steps */
+.sx-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.sx-steps div{border-top:2px solid var(--sol-hi);padding-top:14px}
+.sx-steps i{font-style:normal;font-size:12px;font-weight:600;color:var(--sol-hi)}
+.sx-steps b{display:block;font-size:18px;margin:4px 0}
+.sx-steps span{display:block;font-size:14px;opacity:.7}
+.sx-steps em{display:block;font-style:normal;font-size:15px;font-weight:600;margin-top:10px}
+/* demo */
+.sx-demo{display:grid;grid-template-columns:1fr 320px;gap:clamp(28px,5vw,64px);align-items:center;border-radius:28px;padding:clamp(24px,4vw,48px);background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12)}
+.sx-demo h3{font-size:var(--t-sub);font-weight:600;letter-spacing:-.03em;margin:0 0 12px}
+.sx-demo p{font-size:var(--t-body);line-height:1.75;opacity:.8;margin:0}
+.ph{position:relative;aspect-ratio:9/18.5;border-radius:42px;background:#fff;border:10px solid #10131f;overflow:hidden;color:#0a1a6b;box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+.ph .scr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px;transition:opacity .5s}
+.ph .logo{position:absolute;top:22px;left:0;right:0;text-align:center;z-index:2;font-size:12px;font-weight:600;letter-spacing:.02em}
+.ph h4{font-size:30px;line-height:1.08;letter-spacing:-.04em;margin:0 0 12px;font-weight:600}
+.ph small{font-size:13px;opacity:.7}
+.ph button.cta{margin-top:26px;border:0;border-radius:999px;padding:12px 22px;background:#1f43e0;color:#fff;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.ph button.ghost{background:transparent;color:#1f43e0;padding:8px;margin-top:8px}
+.ph .rip{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;border-radius:50%;border:3px solid #2b4dff;opacity:0}
+.ph.brew .rip{animation:rip 1.8s ease-out forwards}
+.ph.brew .rip:nth-child(2){animation-delay:.25s}.ph.brew .rip:nth-child(3){animation-delay:.5s}
+.ph.brew .fill{transform:scale(1)}
+.ph .fill{position:absolute;left:50%;top:50%;width:150%;aspect-ratio:1;margin-left:-75%;margin-top:-75%;border-radius:50%;background:radial-gradient(circle,#2b4dff 0,#5b78ff 40%,#dfe6ff 70%,transparent 72%);transform:scale(0);transition:transform 1.6s cubic-bezier(.2,.7,.2,1)}
+@keyframes rip{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(9)}}
+.ph .s2,.ph .s3{opacity:0;pointer-events:none}
+.ph.brew .s1{opacity:0;pointer-events:none}.ph.brew .s2{opacity:1;color:#fff}
+.ph.done .s2{opacity:0}.ph.done .s3{opacity:1;pointer-events:auto}
+.ph .rcard{width:100%;border-radius:18px;padding:22px 18px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);border:1px solid #fff;box-shadow:0 20px 40px -20px rgba(10,26,107,.5);transform:translateY(20px) scale(.96);transition:transform .6s .1s}
+.ph.done .rcard{transform:none}
+.ph .rcard i{font-style:normal;font-size:11px;font-weight:600;color:#fff;background:#1f43e0;border-radius:6px;padding:2px 8px}
+.ph .rcard b{display:block;font-size:24px;letter-spacing:-.03em;margin:12px 0 4px}
+/* sub-chapters (AI) */
+.sx-sub{margin-top:clamp(64px,8vw,110px);padding-top:clamp(36px,4vw,48px);border-top:1px solid var(--b-line)}
+.sx-sub .no{font-size:var(--t-cap);font-weight:600;color:var(--b-hi)}
+.sx-sub h3{font-size:var(--t-sub);font-weight:600;letter-spacing:-.03em;margin:8px 0 0}
+.sx-chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:20px}
+.sx-chain span{font-size:14px;padding:7px 14px;border-radius:999px;background:var(--b-card);border:1px solid var(--b-line)}
+.sx-chain span:first-child,.sx-chain span:last-child{background:var(--b-hi);color:#fff;border-color:transparent}
+.sx-chain i{font-style:normal;opacity:.4}
+.sx-pick{display:grid;grid-template-columns:1fr 1.25fr;gap:20px;align-items:start}
+.sx-cand{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.sx-cand button{padding:0;border:0;border-radius:6px;overflow:hidden;cursor:zoom-in;aspect-ratio:16/10;background:#000}
+.sx-cand img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .3s}
+.sx-cand button:hover img{opacity:1}
+.sx-lbl{font-size:var(--t-cap);font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between;gap:10px}
+.sx-lbl span{opacity:.55;font-weight:400}
+.sx-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.sx-tabs button{font:inherit;font-size:13px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--b-line);background:var(--b-card);color:inherit;cursor:pointer}
+.sx-tabs button[aria-pressed="true"]{background:var(--b-ink);color:var(--b-bg);border-color:transparent}
+.sx-seq{display:grid;grid-template-columns:1fr auto 1fr auto 1.6fr;gap:12px;align-items:center}
+.sx-seq .ar{font-size:22px;opacity:.4}
+.sx-seq figure{margin:0}
+.sx-seq img{border-radius:12px;width:100%;aspect-ratio:3/4;object-fit:cover}
+.sx-seq figure:last-child img{aspect-ratio:auto}
+/* flips */
+.sx-flips{display:flex;gap:clamp(16px,3vw,32px);flex-wrap:wrap;justify-content:center}
+.sx-flip{width:clamp(200px,24vw,260px);aspect-ratio:1055/1491;perspective:1400px;background:none;border:0;padding:0;cursor:pointer;color:inherit}
+.sx-flip .in{position:relative;display:block;width:100%;height:100%;transition:transform .9s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.sx-flip.on .in{transform:rotateY(180deg)}
+.sx-flip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:14px;backface-visibility:hidden;box-shadow:0 30px 50px -28px rgba(0,0,0,.7)}
+.sx-flip img.bk{transform:rotateY(180deg)}
+.sx-flip span.n{position:absolute;left:0;right:0;bottom:-30px;font-size:13px;opacity:.6;text-align:center}
+.sx-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sx-notes div{border-radius:18px;padding:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.sx-notes b{display:block;font-size:18px;margin-bottom:8px}
+.sx-notes p{margin:0;font-size:15px;line-height:1.7;opacity:.78}
+.sx-tall{height:620px;overflow-y:auto;border-radius:16px;border:1px solid rgba(255,255,255,.15);background:#000}
+.sx-tall img{width:100%;display:block}
+.sx-cb{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;counter-reset:x}
+.sx-cb div{border-radius:18px;padding:22px;background:var(--b-card);border:1px solid var(--b-line)}
+.sx-cb i{font-style:normal;font-size:var(--t-cap);font-weight:600;color:var(--b-hi)}
+.sx-cb b{display:block;font-size:20px;margin:8px 0 6px}
+.sx-cb span{font-size:14px;opacity:.7;line-height:1.5}
+.sx-kpi{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.sx-kpi div{border-radius:18px;padding:22px;background:var(--b-card);border:1px solid var(--b-line)}
+.sx-kpi span{display:block;font-size:14px;opacity:.65}
+.sx-kpi b{display:block;font-size:clamp(26px,2.6vw,34px);letter-spacing:-.03em;margin-top:8px;font-variant-numeric:tabular-nums;color:var(--b-hi)}
+.sx-close{max-width:40em;margin-inline:auto;text-align:left}
+.sx-close p{font-size:var(--t-lead);line-height:1.85;margin:0 0 1em;opacity:.85}
+.sx-hero .stage{max-width:1000px;margin-inline:auto}
+.sx-hero .shot{border-radius:22px;overflow:hidden;box-shadow:0 60px 120px -40px rgba(0,0,0,.8)}
+.sx-hero .shot img{width:100%;display:block}
+@media (max-width:900px){
+  .sx-eq{grid-template-columns:1fr}.sx-eq .op{justify-self:center;transform:rotate(90deg)}
+  .sx-stats,.sx-cb{grid-template-columns:1fr 1fr}.sx-kpi{grid-template-columns:1fr 1fr}
+  .sx-copy,.sx-demo,.sx-pick{grid-template-columns:1fr}.sx-demo .ph{max-width:300px;margin-inline:auto;width:100%}
+  .sx-steps{grid-template-columns:repeat(3,1fr);row-gap:22px}
+  .sx-notes{grid-template-columns:1fr}.sx-grid.c3,.sx-grid.c2{grid-template-columns:1fr}.sx-grid.c4{grid-template-columns:1fr 1fr}
+  .sx-seq{grid-template-columns:1fr 1fr}.sx-seq .ar{display:none}.sx-seq figure:last-child{grid-column:1/-1}
+  .sx-tall{height:480px}
+}
+@media (max-width:520px){.sx-steps{grid-template-columns:1fr 1fr}.sx-cand{grid-template-columns:repeat(3,1fr)}}
+@media (prefers-reduced-motion:reduce){.sx-flip .in,.ph .fill,.ph .scr,.ph .rcard{transition:none}.ph.brew .rip{animation:none}}
+
+.sx-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:clamp(28px,4vw,44px);position:relative;z-index:3}
+.sx-btn{display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border-radius:999px;font-size:15px;font-weight:600;text-decoration:none;background:var(--a-hi,#5d86ff);color:#06070b}
+.sx-btn.ghost{background:transparent;color:inherit;border:1px solid currentColor;opacity:.85}
+.rB .sx-btn{background:var(--b-hi);color:#fff}.rN .sx-btn{background:var(--sol-hi);color:var(--sol-bg)}
+.scr video.sx-vid{width:100%;height:100%;object-fit:cover;display:block}
+.sx-bw-h{display:grid;grid-template-columns:1fr auto;gap:8px 32px;align-items:end;margin-bottom:24px}
+.sx-bw-h h3{grid-column:1;font-size:var(--t-sub);font-weight:600;letter-spacing:-.03em;margin:0}
+.sx-bw-h p{grid-column:1;margin:0;font-size:var(--t-body);line-height:1.75;opacity:.8;max-width:40em}
+.sx-bw-h .sx-btn{grid-column:2;grid-row:1/3;align-self:center}
+.sx-cap b{font-weight:600;opacity:1}
+@media (max-width:900px){.sx-bw-h{grid-template-columns:1fr}.sx-bw-h .sx-btn{grid-column:1;grid-row:auto;justify-self:start;margin-top:8px}}
 </style>
 </head>
 <body>
@@ -521,6 +709,7 @@ function wordsHtml(html) {
 function render(key) {
   const c = CASES[key], fx = FX[key], jn = JOURNEY[key], root = document.documentElement.style;
   Object.entries({ ...THEMES[key], ...ATM[key] }).forEach(([k, v]) => root.setProperty("--" + k, v));
+  if (c.story) return renderStory(key, c);
   const chapters = [], notes = [];
   const fn = t => { notes.push(t); return `<sup class="fn">${notes.length}</sup>`; };
   const eb = (n, t) => `<p class="eyebrow rv"><i>${n}</i>${t}</p>`;
@@ -682,6 +871,95 @@ function render(key) {
   if (live) { const fit = () => live.style.setProperty("--s", live.clientWidth / 1440); fit(); new ResizeObserver(fit).observe(live); }
 }
 
+/* STORY — a case told as a making-of, in the order it was made (used when a case has c.story) */
+function renderStory(key, c) {
+  const s = c.story, chapters = [];
+  const eb = (n, t) => `<p class="eyebrow rv"><i>${n}</i>${t}</p>`;
+  const P = ps => `<div class="sx-p rv">${ps.map(p => `<p>${p}</p>`).join("")}</div>`;
+  const zimg = (src, alt) => `<button type="button" class="sx-img" data-src="${src}" aria-label="${strip(alt)} 크게 보기"><img src="${src}" alt="${strip(alt)}" loading="lazy"></button>`;
+  const fig = (src, cap) => `<figure>${zimg(src, cap)}${cap ? `<figcaption class="sx-cap">${cap}</figcaption>` : ""}</figure>`;
+  const chain = a => `<div class="sx-chain rv">${a.map(x => `<span>${x}</span>`).join("<i>→</i>")}</div>`;
+  const B = {
+    equation: b => `<div class="sx-eq rv">${b.items.map(([k, v, n], i) => `${i ? `<span class="op" aria-hidden="true">${i === 1 ? "+" : "="}</span>` : ""}<div class="card"><span class="k">${n}</span><b>${k}</b><span>${v}</span></div>`).join("")}</div>`,
+    stats: b => `<div class="sx-stats rv">${b.items.map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>${b.source ? `<p class="sx-cap">${b.source}</p>` : ""}`,
+    text: b => P(b.paras),
+    table: b => `<div class="sx-tw rv"><table class="sx-table"><thead><tr>${b.head.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${b.rows.map(r => `<tr>${r.map(d => `<td>${d}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`,
+    images: b => `<div class="sx-grid c${b.cols} rv">${b.items.map(([src, cap]) => fig(src, cap)).join("")}</div>`,
+    copy: b => `<div class="sx-copy rv"><div><s>${b.strike}</s><span class="main">${b.main}</span><span class="s2">${b.sub}</span><p class="t">${b.text}</p></div>${fig(b.img, "QR 포스터 시안")}</div>`,
+    steps: b => `<div class="sx-steps rv">${b.items.map(([e, k, f], i) => `<div><i>${pad(i + 1)} ${e}</i><b>${k}</b><em>${f}</em></div>`).join("")}</div>`,
+    demo: b => `<div class="sx-demo rv"><div><h3>${b.title}</h3><p>${b.text}</p></div>
+      <div class="ph" id="ph" data-r='${JSON.stringify(b.rewards).replace(/'/g, "&#39;")}'><span class="fill"></span><span class="rip"></span><span class="rip"></span><span class="rip"></span>
+        <span class="logo">luckin coffee</span>
+        <div class="scr s1"><h4>You’re missing<br>your luck.</h4><small>Tap to brew it.</small><button type="button" class="cta" id="phGo">Brew My Luck</button></div>
+        <div class="scr s2" aria-live="polite"><h4>Brewing<br>your luck…</h4></div>
+        <div class="scr s3"><div class="rcard"><i>LUCK UNLOCKED</i><b id="phR">Free Size Up</b><small id="phS">Any drink, any size</small></div><button type="button" class="cta">Claim in the Luckin app</button><button type="button" class="cta ghost" id="phAgain">다시 브루잉하기</button></div>
+      </div></div>`,
+    sub: b => `<div class="sx-sub"><p class="no rv">${b.no}</p><h3 class="rv">${b.title}</h3>${chain(b.chain)}${P(b.paras)}<div class="sx-b">${
+      b.candidates ? `<div class="sx-pick rv"><div><p class="sx-lbl">생성한 매장 후보 <span>일부</span></p><div class="sx-cand">${b.candidates.map(n => `<button type="button" class="arc-it" data-src="img/arch/${n}.jpg" aria-label="생성 후보 크게 보기"><img src="img/arch/${n}.jpg" alt="ChatGPT로 생성한 매장 후보" loading="lazy"></button>`).join("")}</div></div>
+        <div><p class="sx-lbl">고르고 보정해서 웹에 적용한 사진 <span>도시를 눌러 보세요</span></p>${zimg(b.cities[0][1], b.cities[0][0])}<div class="sx-tabs" role="group" aria-label="도시 선택">${b.cities.map(([n, src], i) => `<button type="button" data-city="${src}" aria-pressed="${i ? "false" : "true"}">${n}</button>`).join("")}</div></div></div>
+        ${b.extra ? `<div class="sx-b"><p class="sx-lbl">${b.extra.title}</p><div class="sx-grid c3">${b.extra.items.map(src => fig(src, "")).join("")}</div></div>` : ""}` : ""
+    }${b.posters ? `<div class="sx-grid c4 rv">${b.posters.map(src => fig(src, "")).join("")}</div>` : ""
+    }${b.seq ? `<div class="sx-seq rv">${b.seq.map(([src, cap], i) => `${i ? `<span class="ar" aria-hidden="true">→</span>` : ""}${fig(src, cap)}`).join("")}</div>
+      <div class="sx-b"><p class="sx-lbl">모바일 QR 웹 스토리보드</p><div class="sx-grid c4 rv">${b.story.map(([src, cap]) => fig(src, cap)).join("")}</div></div>` : ""}</div></div>`,
+    flips: b => `<div class="sx-flips rv">${b.items.map(([f, k, n]) => `<button type="button" class="sx-flip" aria-pressed="false" aria-label="${n} 카드 뒤집기"><span class="in"><img src="${f}" alt="${n} 다크 카드"><img class="bk" src="${k}" alt="${n} 라이트 카드"></span><span class="n">${n}</span></button>`).join("")}</div><p class="sx-cap" style="text-align:center;margin-top:44px">${b.text}</p>`,
+    notes: b => `<div class="sx-notes rv">${b.items.map(([k, p]) => `<div><b>${k}</b><p>${p}</p></div>`).join("")}</div>`,
+    tall2: b => `<div class="sx-grid c2 rv">${b.items.map(([src, cap]) => `<figure><p class="sx-lbl">${cap} <span>스크롤해서 보기</span></p><div class="sx-tall" tabindex="0" aria-label="${cap}"><img src="${src}" alt="${cap}" loading="lazy"></div></figure>`).join("")}</div>`,
+    chainbig: b => `<div class="sx-cb rv">${b.items.map(([n, k, p]) => `<div><i>${n}</i><b>${k}</b><span>${p}</span></div>`).join("")}</div>`,
+    brewweb: b => `<div class="sx-bw rv"><div class="sx-bw-h"><h3>${b.title}</h3><p>${b.text}</p><a class="sx-btn" href="${b.link[1]}" target="_blank" rel="noopener">${b.link[0]} ↗</a></div><div class="sx-grid c3">${b.items.map(([src, k, cap]) => `<figure>${zimg(src, k)}<figcaption class="sx-cap"><b>${k}</b> ${cap}</figcaption></figure>`).join("")}</div></div>`,
+    site: b => `<div class="sx-bw rv"><div class="sx-bw-h"><h3>${b.title}</h3><p>${b.text}</p><a class="sx-btn" href="${b.link[1]}" target="_blank" rel="noopener">${b.link[0]} ↗</a></div><div class="sx-grid c2">${b.items.map(([src, cap]) => fig(src, cap)).join("")}</div></div>`,
+    kpi: b => `<div class="sx-kpi rv">${b.items.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join("")}</div>`
+  };
+
+  const hero = `<section class="room rA hero sx-hero" id="s-top"><div class="wrap wide">
+    <p class="eyebrow"><i>${c.meta[2].replace(/\D/g, "")}</i>${c.meta[1]} · ${c.meta[0]}</p>
+    <h1>${c.titleLines.join(" ")}</h1>
+    <p class="sub">${s.sub}</p>
+    <div class="stage">${c.hero.site ? `<div class="mac"><div class="lid"><div class="scr live" id="live"><iframe src="${c.hero.site}" title="${c.meta[1]} 캠페인 웹사이트" loading="lazy"></iframe></div></div><div class="base"></div></div></div>` : `<div class="reflect"><div class="mac"><div class="lid"><div class="scr">${s.heroVideo ? `<video class="a sx-vid" src="${s.heroVideo}" poster="${s.heroImg}" autoplay muted loop playsinline preload="metadata" aria-label="캠페인 웹사이트 히어로 영상"></video>` : `<img class="a" src="${s.heroImg}" alt="캠페인 웹사이트 메인 화면">`}</div></div><div class="base"></div></div></div></div>`}
+    ${s.links ? `<div class="sx-links">${s.links.map(([k, u], i) => `<a class="sx-btn${i ? " ghost" : ""}" href="${u}" target="_blank" rel="noopener">${k} ↗</a>`).join("")}</div>` : ""}
+    <div class="facts">${s.facts.map(([k, v]) => `<span>${k}<b>${v}</b></span>`).join("")}</div></div></section>`;
+
+  const body = s.sections.map((x, i) => {
+    chapters.push([x.id, x.nav.toUpperCase(), x.nav]);
+    return `<section class="room ${x.room} sx" id="${x.id}"><div class="wrap"><div class="sx-head">${eb(pad(i + 1), x.eyebrow)}<h2 class="h2 rv">${x.title}</h2></div>${P(x.paras)}${(x.blocks || []).map(b => `<div class="sx-b">${B[b.type](b)}</div>`).join("")}</div></section>`;
+  }).join("");
+
+  let arc = "";
+  const ar = c.archive;
+  if (ar) {
+    chapters.push(["s-arc", "ARCHIVE", "작업 소스"]);
+    arc = `<section class="room rB" id="s-arc"><div class="wrap wide"><div class="center">${eb(pad(chapters.length), "Archive")}<h2 class="h2 rv">${ar.title}</h2><p class="lead rv">${ar.lead}</p></div>
+      ${ar.note ? `<div class="arc-note rv"><p class="arc-k">기획 노트</p>${ar.note.map(p => `<p>${p}</p>`).join("")}</div>` : ""}
+      ${ar.groups.map(([t, d, ns]) => `<div class="arc-g"><div class="arc-h"><b>${t}</b><span>${d}</span><i>${ns.length}장</i></div><div class="arc-grid">${ns.map(n => `<button type="button" class="arc-it" data-src="img/arch/${n}.jpg" aria-label="${t} 크게 보기"><img src="img/arch/${n}.jpg" alt="${t}" loading="lazy"></button>`).join("")}</div></div>`).join("")}
+    </div></section>`;
+  }
+  chapters.push(["s-learn", "LEARN", s.closing.title]);
+  const close = `<section class="room rN" id="s-learn"><div class="wrap"><div class="center">${eb(pad(chapters.length), s.closing.title)}</div><div class="sx-close">${P(s.closing.paras)}</div></div></section>`;
+  const foot = `<footer class="foot"><div class="wrap"><ol><li>KPI 수치는 실제 집행 결과가 아니라 기획 단계에서 세운 목표입니다.</li><li>실제 브랜드를 바탕으로 한 개인 기획 프로젝트입니다.</li></ol><div class="bc"><span>${c.meta[1]}</span><span>${c.meta[2]} · ${c.meta[0]}</span></div></div></footer>`;
+
+  $("#view").innerHTML = hero + body + arc + close + foot;
+  $("#lt").textContent = c.tab;
+  $("#lsec").innerHTML = chapters.map(([id, k, t], i) => `<button data-go="${id}"><i>${i + 1}</i>${t}</button>`).join("");
+  wire(chapters);
+
+  const live = $("#live");
+  if (live) { const fit = () => live.style.setProperty("--s", live.clientWidth / 1440); fit(); new ResizeObserver(fit).observe(live); }
+
+  /* story interactions */
+  document.querySelectorAll("#view .sx-flip").forEach(b => b.addEventListener("click", () => { const on = b.classList.toggle("on"); b.setAttribute("aria-pressed", on); }));
+  document.querySelectorAll("#view .sx-tabs").forEach(g => g.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    g.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); const box = g.previousElementSibling; box.dataset.src = b.dataset.city; box.querySelector("img").src = b.dataset.city; box.querySelector("img").alt = b.textContent;
+  })));
+  const ph = $("#ph");
+  if (ph) {
+    const R = JSON.parse(ph.dataset.r); let last = -1, tm;
+    const go = () => { clearTimeout(tm); let k; do k = Math.floor(Math.random() * R.length); while (k === last && R.length > 1); last = k;
+      $("#phR").textContent = R[k][0]; $("#phS").textContent = R[k][1]; ph.classList.remove("done"); ph.classList.add("brew");
+      tm = setTimeout(() => ph.classList.add("done"), matchMedia("(prefers-reduced-motion: reduce)").matches ? 200 : 2100); };
+    $("#phGo").addEventListener("click", go);
+    $("#phAgain").addEventListener("click", () => { ph.classList.remove("brew", "done"); });
+  }
+}
+
 function wire(chapters) {
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => document.getElementById(b.dataset.go)?.scrollIntoView({ behavior: "smooth" })));
@@ -789,6 +1067,12 @@ function route() {
 $("#tabs").innerHTML = ORDER.map(k => `<a href="#${k}" data-k="${k}">${CASES[k].tab}</a>`).join("");
 addEventListener("hashchange", () => { route(); scrollTo(0, 0); });
 route();
+</script>
+<div class="arc-lb" id="arcLb" role="dialog" aria-modal="true" aria-label="이미지 크게 보기"><button type="button" aria-label="닫기">×</button><img alt=""></div>
+<script>
+(function(){const lb=document.getElementById("arcLb"),im=lb.querySelector("img");
+document.addEventListener("click",e=>{const b=e.target.closest(".arc-it, .sx-img");if(b){im.src=b.dataset.src;lb.classList.add("on");lb.scrollTop=0;}else if(e.target.closest("#arcLb"))lb.classList.remove("on");});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")lb.classList.remove("on");});})();
 </script>
 </body>
 </html>

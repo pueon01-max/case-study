@@ -222,54 +222,214 @@ const CASES = {
     tab: "Luckin Campaign",
     meta: ["Global Campaign · Promotion Web", "Luckin Coffee", "Case 04"],
     titleLines: ["Brew", "your luck."],
-    hero: { kind: "image", src: "img/camp-hero.jpg", site: "campaign/index.html", siteLinks: [["campaign/index.html", "프로모션 사이트 열기"], ["campaign/brew.html", "Brew 체험 열기"]], alt: "You're missing your luck QR 포스터 키비주얼" },
-    statement: "<strong>You’re missing your luck.</strong> 놓칠까 봐 찍게 되는 QR 캠페인.",
-    overview: "BREW YOUR LUCK은 글로벌 MZ 소비자가 오프라인 QR 포스터로 모바일 웹에 들어와, 커피가 퍼지는 인터랙션으로 랜덤 리워드를 확인하고, 루이싱 앱 다운로드까지 자연스럽게 이어지도록 설계한 QR 기반 인터랙티브 프로모션이다.",
-    facts: [["Role", null], ["Period", null], ["Team", null], ["Tools", "Figma"]],
+    hero: { kind: "image", src: "img/camp-hero.jpg", site: "campaign/index.html", alt: "You're missing your luck QR 포스터 키비주얼" },
+    statement: "루이싱이 한국에 온다면, 처음 받는 공짜 커피를 <strong>행운</strong>으로.",
+    overview: "중국에서 이미 폭발적인 인기로 중국 시장에서는 스타벅스보다 매장 수가 많은 루이싱 커피가 한국에 런칭한다면 어떨까라는 발상에서 시작되었습니다. 또한 글로벌로 런칭할 때도 맥락이 이어지길 바라는 마음으로 기획을 시작했습니다. 루이싱은 앱을 처음 다운로드하면 거의 공짜 커피 한 잔인 쿠폰을 주는데, 이 혜택을 더 재밌게 전달하며 인앱 다운로드 수를 늘리고 브랜드 이름까지 직관적으로 전달할 방법을 고민하던 중, 루이싱의 이름(luck + in의 합성어)과 처음 받아보는 혜택인 공짜 커피를 연결해 보면 재미있겠다는 생각을 하게 되었습니다.",
+    facts: [["Role", "기획 · 리서치 · 디자인 · AI 활용 구현"], ["Period", "2026.05 – 06"], ["Team", "개인 작업"], ["Tools", "Figma · ChatGPT · Midjourney · Photoshop"]],
     context: {
-      sub: "루이싱 커피의 시장 상황",
-      big: { label: "루이싱 매장 수", value: "31,048", unit: "", note: "중국 로컬 브랜드를 넘어 글로벌 커피 브랜드로 성장 중", chip: "Global Expansion" },
-      stats: [["2025", "", "7월 뉴욕에 첫 미국 매장 2곳 오픈"], ["≈ 50", "%", "주 1회 이상 QR을 스캔하는 Gen Z와 밀레니얼"], ["88", "%", "QR에 대한 소비자 태도가 더 긍정적으로 변했다고 답한 마케터 (2025)"]],
+      sub: "루이싱을 들여다보며",
+      big: { label: "루이싱 매장 수 (2025년 말)", value: "31,048", unit: "", note: "중국 로컬 브랜드를 넘어 2025년 뉴욕까지, 이미 글로벌 확장 단계", chip: "Global Expansion" },
+      stats: [["100", "%", "앱 주문 · 캐셔리스 매장, 빠르게 소비되는 디지털 커피"], ["≈ 50", "%", "주 1회 이상 QR을 스캔하는 Gen Z와 밀레니얼"], ["88", "%", "QR에 대한 소비자 태도가 더 긍정적으로 변했다고 답한 마케터 (2025)"]],
       source: "기획안 리서치 기준 · Reuters, Mintel, QR 마케팅 자료",
+      diagnosis: { vis: { kind: "web", src: "img/lkweb-before.jpg", alt: "기존 루이싱 커피 웹사이트" }, pts: [[30, 28], [32, 84], [86, 30]],
+        title: "그런데 웹사이트는",
+        issues: [
+          ["2010년대에 머문 화면", "바둑판식 레이아웃과 저화질 이미지로, 테크 브랜드라는 정체성을 전혀 보여주지 못했습니다."],
+          ["읽고 싶지 않은 줄글", "최고의 테크 기업인데 그걸 빽빽한 줄글로만 설명하고 있었습니다."],
+          ["프로모션이 없는 사이트", "투자 정보와 회사 정보만 나열되어 있고, 앱으로 이어지는 프로모션 기능은 아예 없었습니다."]
+        ] },
       table: { head: ["현재 마케팅", "특징", "한계"],
-        rows: [["앱 다운로드 할인", "첫 주문 · 신규 가입 혜택", "가격 중심 이미지가 강함"], ["쿠폰 · 바우처", "앱 접속 및 재구매 유도", "경쟁사도 쉽게 함"], ["빠른 픽업 · 주문", "편의성 강조", "브랜드 감정 각인은 약함"], ["협업 · 시즌 메뉴", "바이럴 가능성", "캠페인 경험으로 연결되지 않음"]] },
+        rows: [["앱 다운로드 할인", "첫 주문 · 신규 가입 혜택", "가격 중심 이미지가 강함"], ["쿠폰 · 바우처", "앱 접속, 재구매 유도", "경쟁사도 쉽게 따라 함"], ["빠른 픽업 · 주문", "편의성 강조", "브랜드 감정은 남지 않음"], ["협업 · 시즌 메뉴", "바이럴 가능성", "캠페인 경험으로 이어지지 않음"]] },
       insight: "혜택은 있지만,<br><em>기억되는 첫 경험</em>은 약하다.",
-      insightNote: "글로벌 신규 소비자에게 루이싱은 아직 ‘왜 Luckin인가?’를 기억하게 할 첫 경험이 부족했다."
+      insightNote: "그래서 과제는 ‘앱 다운받으면 할인’이 아니라, QR을 찍는 순간부터 루이싱이라는 이름을 기억하게 만들고 앱에서 혜택을 직접 경험하게 만드는 것이었습니다."
     },
     process: [
-      ["Research", "시장 상황, 현재 마케팅 방식, 글로벌 MZ 소비자 인사이트를 조사했다."],
-      ["Define", "‘혜택은 있지만 기억되는 첫 경험은 약하다’로 문제를 정의했다."],
-      ["Concept", "Mystery, FOMO, Interaction, Reward, Conversion 다섯 축으로 BREW YOUR LUCK 컨셉을 만들었다."],
-      ["Design", "QR 포스터, 리워드 인터랙션, 프로모션 웹사이트를 디자인했다."]
+      ["Research", "루이싱이 어떤 브랜드인지, 시장과 마케팅, 웹사이트가 어디에 서 있는지 먼저 정리했습니다."],
+      ["Idea", "luck + in이라는 이름과 첫 공짜 커피를 연결하고, 스캔 한 번이면 되는 QR과 FOMO 카피로 정했습니다."],
+      ["AI Visual", "ChatGPT와 Midjourney로 몇십 장씩 생성하고, 고르고, 포토샵으로 직접 다듬었습니다."],
+      ["Build", "시안 + 설계도 + 섹션별 요구사항을 프롬프트로 묶어 웹사이트를 구현했습니다."]
     ],
-    flow: { title: "다섯 단계가 겹치지 않으면서 하나의 전환 흐름을 만든다",
-      steps: [["Mystery", "QR 스캔 유도", "“뭐지?” 관심을 유발하는 첫 접점"], ["FOMO", "행동 압박", "“나만 놓치나?” 지금 참여하지 않으면 손해"], ["Interaction", "경험 몰입", "“재밌다!” 커피가 퍼지는 인터랙션으로 브랜드를 기억"], ["Reward", "실질 혜택", "“받았다!” 리워드로 만족과 보상"], ["Conversion", "앱 다운로드", "“써볼까?” 앱 설치로 지속적인 관계 형성"]] },
+    flow: { title: "단계마다 사용자가 느낄 감정까지 적어 두고 디자인했습니다",
+      steps: [["Entry", "미스터리 포스터", "“뭐지?” 흰 배경에 QR과 문구만"], ["Brew", "브루잉 인터랙션", "“나만 놓치는 건가?” Brewing your luck…"], ["Reveal", "랜덤 쿠폰 공개", "“와! 받았다!” 커피 물결 속에서 떠오르는 카드"], ["Claim", "앱 다운로드", "“한번 써볼까?” Your luck lives in the Luckin app."], ["Share", "SNS 공유", "“나도 공유해야지!” 앱 다운로드보다 뒤에"], ["Complete", "쿠폰 저장 · 첫 주문", "“좋아, 바로 써야지!”"]] },
     decisions: [
-      { tag: "Decision 01", title: "‘행운을 찾으세요’가 아니라 ‘행운을 놓치고 있어요’",
-        body: "사람을 QR 앞에 멈추게 하는 감정은 행운을 얻고 싶은 마음보다, 혹시 나만 놓치고 있는 게 있나 하는 마음이라고 봤다.",
-        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/camp-posters.jpg" }] },
-        problem: "앱 다운로드 할인과 쿠폰은 강한 전환 장치지만, 가격 중심 이미지가 강하고 경쟁사도 쉽게 따라 한다.",
-        evidence: "MZ는 단순 광고보다 참여형 경험에 반응하고, QR은 더 이상 낯선 기술이 아니다.",
-        solution: "뻔한 ‘Looking for your luck?’ 대신 <strong>‘You’re missing your luck.’</strong>과 ‘Scan before someone else claims it’으로 FOMO를 건드렸다." },
-      { tag: "Decision 02", title: "스캔에서 앱까지 끊기지 않는 네 단계",
-        body: "QR을 찍는 순간부터 루이싱이라는 이름을 기억하고, 앱에서 혜택을 경험하도록 흐름을 설계했다.",
-        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/camp-flow.jpg" }] },
-        problem: "‘앱 다운받으면 할인’만으로는 브랜드 첫인상을 강하게 남기지 못한다.",
-        evidence: "2025년 경험 마케팅은 메시지 전달보다 놀이, 몰입, 세계관 구축으로 소비자 경험을 강화하는 방향으로 움직인다.",
-        solution: "<strong>Scan → Brew → Reveal → Claim</strong>. 커피가 퍼지는 연출로 랜덤 리워드를 공개하고, 리워드는 루이싱 앱에서 받도록 했다." },
-      { tag: "Decision 03", title: "도시마다 행운을 찾게 하는 프로모션 웹",
-        body: "QR로 들어온 사람이 루이싱의 글로벌 확장을 한눈에 보도록, 도시별 매장을 카드로 탐색하는 프로모션 웹사이트를 만들었다.",
-        visual: { kind: "web", before: null, after: [{ src: "img/camp-web-hero.jpg" }, { src: "img/camp-web-city.jpg" }] },
-        problem: "기존 웹사이트에는 프로모션 기능이 없고 투자 정보와 회사 정보만 나열되어 있다.",
-        evidence: "루이싱은 2025년 뉴욕에 진출하며 중국 로컬을 넘어 글로벌 브랜드로 확장하고 있다.",
-        solution: "‘Brewing Luck Around the World’ 지도와 중국 · 싱가포르 · 뉴욕 · 서울 <strong>도시 카드</strong>. 마우스를 올리면 카드가 떠오르고, 드래그하면 뒤집힌다." }
+      { tag: "Decision 01", title: "스캔 한 번에 연결되는 QR",
+        body: "참여 대상을 파악해 보았을 때 글로벌 MZ세대와 커피를 가장 많이 소비하는 연령층 모두가 편하게 참여할 수 있는 콘텐츠는 어떤 것일까 생각해 보았습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/arch/r_poster.jpg" }] },
+        problem: "앱 다운로드 할인과 쿠폰은 강한 전환 장치지만, 가격 중심 이미지가 강하고 경쟁사도 쉽게 따라 합니다.",
+        evidence: "Gen Z와 밀레니얼의 약 절반이 이미 주 1회 이상 QR을 스캔하고 있었습니다.",
+        solution: "스캔 한 번에 연결되는 <strong>QR 형식</strong>이 가장 적합하겠다고 판단했습니다." },
+      { tag: "Decision 02", title: "You’re missing your luck",
+        body: "‘You’re missing your luck’이라는 문구로 포스터를 만들고, 사람들의 포모를 자극해 QR 코드를 찍어 보게 하는 방식으로 인앱 다운로드를 받는 프로모션을 기획했습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/camp-posters.jpg" }, { src: "img/hq/camp-userflow.jpg" }] },
+        problem: "사람들이 QR을 찍게 만드는 감정은 행운을 얻고 싶은 마음보다 ‘혹시 나만 놓치고 있는 게 있나?’에 더 가깝다고 생각했습니다.",
+        evidence: "MZ는 단순 광고보다 놀이와 몰입이 있는 참여형 경험에 더 반응합니다.",
+        solution: "QR을 찍으면 웹사이트가 나오고, <strong>브루잉되는 인터랙션</strong>이 돌아가며 랜덤한 쿠폰들이 떠오르고, 바로 인앱 다운로드까지 연결되게끔 만들었습니다." },
+      { tag: "Decision 03", title: "한국 메인 홈페이지",
+        body: "한국에 런칭하게 되는 상황이기에 한국 메인 홈페이지에는 히어로에 영상을 배치하는 방향을 넣었습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/hq/camp-home-orig.jpg" }, { src: "img/hq/camp-menu-posters.jpg" }] },
+        problem: "기존 웹사이트는 투자 정보와 회사 정보만 나열되어 있고 프로모션 기능이 아예 없었습니다.",
+        evidence: "루이싱은 이미 싱가포르와 중국, 뉴욕에 매장이 있는 글로벌 브랜드입니다.",
+        solution: "이미 싱가포르와 중국, 뉴욕에 매장이 있다는 것을 알려 주고, <strong>대표 메뉴 사진을 스타일리시하게 연출한 포스터</strong>를 배치했으며, 각국의 매장 사진들은 감성을 통일해 넣었습니다." },
+      { tag: "Decision 04", title: "몇십 장의 생성 끝에 고른 매장 사진",
+        body: "웹사이트의 전체적인 색감을 통일하기 위해 ChatGPT에 각 지역의 도시 사진 무드 레퍼런스를 준 후 루이싱 커피 매장을 생성해 달라고 했습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/hq/camp-ai-stores.jpg" }, { src: "img/hq/camp-city-final.jpg" }] },
+        problem: "나라마다 매장 사진의 감성이 다르면 웹사이트 전체 색감이 깨집니다.",
+        evidence: "몇십 장의 생성 끝에 매장이 잘 보이면서도 각국의 특색이 잘 드러나는 사진을 골랐습니다.",
+        solution: "고른 사진을 <strong>포토샵으로 전체적인 색감을 보정</strong>한 후 웹사이트 시안을 완성했습니다." },
+      { tag: "Decision 05", title: "도트로 그린 도시 포스터",
+        body: "각 매장에도 그 나라의 특색을 나타내는 포스터가 있기를 바랐습니다. 그래서 한국과 중국, 미국, 싱가포르의 도시들을 나타내는 특색 있는 포스터를 만들었습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/hq/camp-dot-posters.jpg" }] },
+        problem: "QR 코드가 자연스럽게 배치되면서 각 도시의 무드도 나타내야 했습니다.",
+        evidence: "도트화로 그려지면 좋겠다고 생각했고, 몇 가지 도트 타입 포스터 레퍼런스를 수집했습니다.",
+        solution: "<strong>QR 코드와 각 도시의 랜드마크</strong>가 잘 녹아 있는 포스터들을 디자인했습니다." },
+      { tag: "Decision 06", title: "플립되는 매장 카드",
+        body: "웹페이지에서 각 매장의 사진이 나올 때 카드가 플립되며 회전하면 재미를 줄 수 있겠다는 생각이 들었습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/hq/camp-flips6.jpg" }, { src: "img/camp-web-city.jpg" }] },
+        problem: "매장 사진만 나열하면 도시마다의 이야기가 스쳐 지나갑니다.",
+        evidence: "마우스를 올리면 어두워지면서 유기체 블러 처리, 입체적인 카드가 팝업되도록 설계했습니다.",
+        solution: "검은 카드를 드래그하면 하얀 카드로 바뀌도록, 각 섹션마다 <strong>라이트 버전과 다크 버전 2개</strong>를 배치했습니다." },
+      { tag: "Decision 07", title: "히어로는 출근길 지하철",
+        body: "메인 히어로에 오는 영상은, 커피를 가장 많이 소비하는 현대인들이 가장 많이 지나다니는 곳이 어디일까 생각했을 때 바로 떠오른 직장인들의 출근길 지하철로 정했습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/hq/camp-mj-subway.jpg" }, { src: "img/hq/camp-subway.jpg" }] },
+        problem: "미드저니로 각기 다른 플랫폼들과 사람들이 지나다니는 바쁜 길목 등을 생성했지만, 미드저니가 타이포에 약했습니다.",
+        evidence: "생성된 이미지들은 업스케일링 후 어도비 포토샵 후보정으로 직접 로고를 플랫폼에 넣거나 간판에 배치했습니다.",
+        solution: "그 후 다시 <strong>미드저니에서 영상으로 생성</strong>해, 포스터를 메인으로 장면이 자연스럽게 전환되는 캠페인 느낌의 영상을 제작해 넣었습니다." },
+      { tag: "Decision 08", title: "설계도처럼 정리해서 프롬프트로",
+        body: "시안을 다 만든 후 웹사이트 구현은 시안 사진을 쭉 깔고, 각 섹션마다 담당될 부분을 직접 설계도처럼 만들었습니다.",
+        visual: { kind: "web", before: null, plain: true, after: [{ src: "img/hq/camp-home-memo.jpg" }] },
+        problem: "인터랙션과 각각의 요소들을 자세히 배치하려면 코딩으로는 많은 시간이 걸리게 됩니다.",
+        evidence: "사진 이미지 시안 + 설계도 시안 + 섹션마다 요구했던 부분을 정리한 글 등을 프롬프트로 정리해 넣었습니다.",
+        solution: "기획 단계에는 꽤 많은 시간이 걸렸지만, <strong>웹사이트 빌딩 자체의 시간은 많이 단축</strong>할 수 있었습니다." }
     ],
-    compare: null,
+    compare: { kind: "web", title: "시안 위에<br>인터랙션을 적다", note: "원본 시안 위에 섹션마다 적용할 인터랙션을 직접 적었습니다. 이 시안 + 설계도 + 요구사항 글을 프롬프트로 묶어 넣어, 기획엔 시간이 걸렸지만 빌드 시간은 크게 줄었습니다.", before: "img/hq/camp-home-orig.jpg", after: "img/hq/camp-home-memo.jpg" },
+    story: {
+      facts: [["Role", "기획 · 리서치 · 디자인"], ["Period", "2026.05 – 06"], ["Team", "개인 작업"], ["Tools", "Figma · ChatGPT · Midjourney · Photoshop"]],
+      sub: "루이싱 커피가 한국에 런칭한다면 어떨까라는 발상에서 시작된<br>QR 기반 프로모션 웹사이트 기획입니다.",
+      heroImg: "img/live/site-hero.jpg",
+      heroVideo: "img/live/campaign.mp4",
+      links: [["캠페인 웹사이트 보기", "campaign/index.html"], ["QR 브루잉 웹 보기", "campaign/brew.html"]],
+      sections: [
+        { id: "st-start", nav: "시작", room: "rB", eyebrow: "기획의 시작", title: "루이싱 커피가 한국에 런칭한다면",
+          paras: [
+            "중국에서 이미 폭발적인 인기로 중국 시장에서는 스타벅스보다 매장 수가 많은 루이싱 커피가 한국에 런칭한다면 어떨까라는 발상에서 시작되었습니다. 또한 글로벌로 런칭할 때도 맥락이 이어지길 바라는 마음으로 기획을 시작하게 되었습니다.",
+            "루이싱 커피는 앱을 처음 다운로드하면 쿠폰을 발급해 줍니다. 거의 공짜 커피 한 잔을 주는 셈입니다. 원래도 저가 커피이지만, 이 혜택을 더 재밌게 전달하면서 인앱 다운로드 수를 늘리고 브랜드의 이름까지 직관적으로 전달할 수 있는 방법이 무엇인지 고민했습니다. 그러던 중 루이싱의 이름과 처음 받아보는 혜택인 공짜 커피를 연결해 보면 재미있겠다는 생각을 하게 되었습니다."
+          ],
+          blocks: [{ type: "equation", items: [["Luckin", "luck + in", "브랜드 이름"], ["First Coupon", "공짜 커피 한 잔", "첫 앱 다운로드 혜택"], ["Brew your luck", "처음 받는 커피를 행운으로", "캠페인 컨셉"]] }] },
+
+        { id: "st-research", nav: "분석", room: "rN", eyebrow: "시장 및 현황 분석", title: "루이싱은 지금 어떤 브랜드일까",
+          paras: [
+            "아이디어를 구체화하기 전에 루이싱이 지금 어떤 브랜드이고 어떤 상황에 있는지부터 정리해 보았습니다. 루이싱은 스타벅스처럼 공간을 중심으로 한 브랜드가 아니라, 100% 앱 주문과 캐셔리스 매장을 기반으로 빠르게 소비되는 디지털 커피 경험에 가까운 브랜드였습니다. 또한 2025년 뉴욕에 첫 미국 매장을 열며 이미 글로벌 확장 단계에 들어서 있었습니다."
+          ],
+          blocks: [
+            { type: "stats", items: [["31,048", "2025년 말 기준 루이싱 매장 수"], ["100%", "앱 주문 · 캐셔리스 매장"], ["≈ 50%", "주 1회 이상 QR을 스캔하는 Gen Z와 밀레니얼"], ["88%", "QR에 대한 소비자 태도가 긍정적으로 변했다고 답한 마케터"]], source: "Reuters, Mintel, QR 마케팅 자료 기준" },
+            { type: "text", paras: ["하지만 현재 웹사이트는 2010년대 초반 스타일의 바둑판식 레이아웃과 빽빽한 줄글로 되어 있어 테크 브랜드라는 정체성을 보여주지 못하고 있었고, 투자 정보와 회사 정보만 나열되어 있을 뿐 프로모션 기능은 없었습니다. 마케팅 또한 앱 다운로드 할인과 쿠폰처럼 전환에는 강했지만 가격 중심의 이미지가 강해, 처음 루이싱을 만나는 사람에게 브랜드를 기억하게 만들기에는 부족하다고 느꼈습니다."] },
+            { type: "table", head: ["현재 마케팅", "특징", "한계"], rows: [["앱 다운로드 할인", "첫 주문 · 신규 가입 혜택", "가격 중심 이미지가 강함"], ["쿠폰 · 바우처", "앱 접속, 재구매 유도", "경쟁사도 쉽게 따라 함"], ["빠른 픽업 · 주문", "편의성 강조", "브랜드 감정은 남지 않음"], ["협업 · 시즌 메뉴", "바이럴 가능성", "캠페인 경험으로 이어지지 않음"]] },
+            { type: "images", cols: 3, items: [["img/arch/r_market.jpg", "시장 상황"], ["img/arch/r_web.jpg", "현재 웹사이트 분석"], ["img/arch/r_mz.jpg", "글로벌 MZ 소비자 인사이트"]] }
+          ] },
+
+        { id: "st-idea", nav: "방향", room: "rB", eyebrow: "문제 정의와 캠페인 방향", title: "혜택은 있지만,<br>기억되는 첫 경험은 약하다",
+          paras: [
+            "그래서 단순히 ‘앱을 다운받으면 할인’이 아니라, QR을 찍는 순간부터 루이싱이라는 이름을 기억하고 앱을 다운받아 루이싱 커피가 주는 혜택을 경험하도록 만드는 것을 과제로 잡았습니다. 캠페인의 방향은 쿠폰을 뿌리는 브랜드에서 행운을 발견하게 하는 디지털 커피 브랜드로 인식을 전환하는 것으로 정했습니다.",
+            "참여 대상을 파악해 보았을 때 글로벌 MZ세대, 그리고 커피를 가장 많이 소비하는 연령층 모두가 편하게 참여할 수 있는 콘텐츠는 어떤 것일까 생각해 보니, 스캔 한 번에 연결되는 QR 형식이 가장 적합하겠다고 판단하게 되었습니다."
+          ],
+          blocks: [
+            { type: "copy", strike: "Looking for your luck?", main: "You’re missing your luck.", sub: "Scan before someone else claims it",
+              text: "사람들이 QR을 찍게 만드는 감정은 행운을 얻고 싶은 마음보다 ‘혹시 나만 놓치고 있는 게 있나?’에 더 가깝다고 생각했습니다. 그래서 뻔한 문장보다 사람들의 포모를 자극하는 ‘You’re missing your luck’이라는 문구를 활용해 포스터를 만들고, QR 코드를 찍어 보게 하는 방식으로 인앱 다운로드를 받는 프로모션을 기획하게 되었습니다.",
+              img: "img/arch/r_poster.jpg" }
+          ] },
+
+        { id: "st-flow", nav: "플로우", room: "rN", eyebrow: "사용자 플로우", title: "포스터에서 앱 다운로드까지",
+          paras: ["QR을 찍으면 웹사이트가 나오고, 브루잉되는 인터랙션이 돌아가며 랜덤한 쿠폰들이 떠오르고, 바로 인앱 다운로드까지 연결되게끔 만들었습니다. 단계마다 사용자가 느낄 감정까지 함께 적어 두고 디자인했습니다."],
+          blocks: [
+            { type: "steps", items: [["Entry", "미스터리 포스터", "“뭐지?”"], ["Brew", "브루잉 인터랙션", "“나만 놓치는 건가?”"], ["Reveal", "랜덤 쿠폰 공개", "“와! 받았다!”"], ["Claim", "앱 다운로드", "“한번 써볼까?”"], ["Share", "SNS 공유", "“나도 공유해야지!”"], ["Complete", "쿠폰 저장 · 첫 주문", "“좋아, 바로 써야지!”"]] },
+            { type: "brewweb", title: "QR을 찍으면 열리는 브루잉 웹",
+              text: "물 위에 떠 있는 클로버를 누르면 커피가 퍼지며 브루잉이 시작되고, 화면을 누르고 있으면 더 빠르게 저어지도록 만들었습니다. 브루잉이 끝나면 랜덤한 쿠폰 카드가 떠오르고, 바로 앱에서 쿠폰을 받을 수 있도록 연결됩니다.",
+              link: ["직접 브루잉해 보기", "campaign/brew.html"],
+              items: [["img/live/brew-1.jpg", "01 Entry", "You’re missing your luck. Tap to brew it."], ["img/live/brew-2.jpg", "02 Brewing", "누르고 있으면 더 빠르게 저어지는 브루잉"], ["img/live/brew-3.jpg", "03 Reveal", "랜덤 쿠폰 카드와 앱 연결"]] },
+            { type: "images", cols: 1, items: [["img/hq/camp-userflow.jpg", "캠페인 사용자 플로우"]] }
+          ] },
+
+        { id: "st-ai", nav: "AI 비주얼", room: "rB", eyebrow: "AI를 활용한 비주얼 제작", title: "생성하고, 고르고, 직접 보정하기",
+          paras: ["비주얼의 대부분은 ChatGPT와 미드저니로 생성했지만, 생성된 이미지를 그대로 사용하기보다는 원하는 결과가 나올 때까지 생성하고, 고르고, 직접 보정하는 과정을 반복했습니다."],
+          blocks: [
+            { type: "sub", no: "01", title: "각 나라의 매장 사진",
+              chain: ["도시 무드 레퍼런스", "ChatGPT 매장 생성", "몇십 장 중 선택", "포토샵 색감 보정", "웹 시안 적용"],
+              paras: [
+                "한국에 런칭하게 되는 상황이기에 한국 메인 홈페이지에는 히어로에 영상을 배치하는 방향을 넣었습니다. 이미 싱가포르와 중국, 뉴욕에 매장이 있다는 것을 알려 주고, 대표 메뉴 사진을 스타일리시하게 연출한 포스터를 배치했으며, 각국의 매장 사진들은 감성을 통일해 넣었습니다.",
+                "웹사이트의 전체적인 색감을 통일하기 위해 ChatGPT에 각 지역의 도시 사진 무드 레퍼런스를 준 후 루이싱 커피 매장을 생성해 달라고 했습니다. 몇십 장의 생성 끝에 매장이 잘 보이면서도 각국의 특색이 잘 드러나는 사진을 골랐고, 포토샵으로 전체적인 색감을 보정한 후 웹사이트 시안을 완성했습니다."
+              ],
+              candidates: ["gen1","gen2","gen3","gen4","gen5","gen6","gen7","gen8","gen9","gen10","gen11","gen12","g3a","g3b","g3c","g3d"],
+              cities: [["CHINA", "img/live/site-china.jpg"], ["SINGAPORE", "img/live/site-singapore.jpg"], ["NEW YORK", "img/live/site-newyork.jpg"], ["SEOUL", "img/live/site-seoul.jpg"]],
+              extra: { title: "대표 메뉴 포스터", items: ["img/arch/bot3.jpg", "img/arch/bot2.jpg", "img/arch/bot1.jpg"] } },
+            { type: "sub", no: "02", title: "도트로 그린 도시 포스터",
+              chain: ["도트 포스터 레퍼런스 수집", "도시별 랜드마크", "QR 코드 배치", "포스터 디자인"],
+              paras: ["각 매장에도 그 나라의 특색을 나타내는 포스터가 있기를 바랐습니다. 그래서 한국과 중국, 미국, 싱가포르의 도시들을 나타내는 특색 있는 포스터를 만들었습니다. QR 코드가 자연스럽게 배치되면서 각 도시의 무드를 나타내는 포스터를 만들려면 도트화로 그리면 좋겠다고 생각했고, 몇 가지 도트 타입 포스터 레퍼런스를 수집한 후 QR 코드와 각 도시의 랜드마크가 잘 녹아 있는 포스터들을 디자인하게 되었습니다."],
+              posters: ["img/arch/poster1.jpg", "img/arch/poster2.jpg", "img/arch/poster3.jpg", "img/arch/poster4.jpg"] },
+            { type: "sub", no: "03", title: "출근길 지하철 히어로 영상",
+              chain: ["Midjourney 이미지 생성", "업스케일링", "포토샵 로고 · 간판 합성", "Midjourney 영상 생성"],
+              paras: ["메인 히어로에 들어가는 영상은, 커피를 가장 많이 소비하는 현대인들이 가장 많이 지나다니는 곳이 어디일까 생각했을 때 바로 떠오른 직장인들의 출근길 지하철로 정했습니다. 그래서 미드저니를 통해 각기 다른 플랫폼들과 사람들이 지나다니는 바쁜 길목 등을 생성했습니다. 미드저니가 타이포에 약해서, 생성된 이미지들은 업스케일링 후 어도비 포토샵 후보정으로 직접 로고를 플랫폼에 넣거나 간판에 배치했습니다. 그 후 다시 미드저니에서 영상으로 생성해, 포스터를 메인으로 장면이 자연스럽게 전환되는 캠페인 느낌의 영상을 제작해 넣게 되었습니다."],
+              seq: [["img/arch/e3.jpg", "Midjourney로 생성한 지하철"], ["img/arch/e4.jpg", "Midjourney로 생성한 플랫폼"], ["img/hq/camp-subway.jpg", "로고와 포스터를 직접 합성한 장면"]],
+              story: [["img/arch/story1.jpg", "WAIT"], ["img/arch/story2.jpg", "Did you miss something?"], ["img/arch/story3.jpg", "You’re missing your luck."], ["img/arch/story4.jpg", "Tap to brew it."]] }
+          ] },
+
+        { id: "st-web", nav: "웹사이트", room: "rN", eyebrow: "캠페인 웹사이트와 인터랙션", title: "시안에서 실제 웹사이트까지",
+          paras: ["원본 시안을 먼저 만든 후, 그 위에 섹션별로 적용할 인터랙션을 직접 적어 가며 발전시켰습니다. 웹페이지에서는 각 매장의 사진이 나올 때 카드가 플립되며 회전하면 재미를 줄 수 있겠다는 생각이 들어, 각 섹션마다 라이트 버전과 다크 버전 2개를 배치했습니다."],
+          blocks: [
+            { type: "site", title: "구현한 캠페인 웹사이트", text: "완성한 캠페인 웹사이트는 직접 구현해 올려 두었습니다. 히어로의 지하철 영상부터 메뉴 포스터, 지도, 도시별 매장 카드까지 시안에서 설계한 흐름 그대로 이어집니다.",
+              link: ["캠페인 웹사이트 보기", "campaign/index.html"],
+              items: [["img/live/site-subway.jpg", "Subway"], ["img/live/site-posters.jpg", "Posters"], ["img/live/site-map.jpg", "Brewing Luck Around the World"], ["img/live/site-seoul.jpg", "Seoul, we have arrived."]] },
+            { type: "flips", text: "카드를 누르면 실제 웹에서처럼 뒤집힙니다.", items: [["img/arch/flip_sh_b.jpg", "img/arch/flip_sh_w.jpg", "Shanghai"], ["img/arch/flip_sg_b.jpg", "img/arch/flip_sg_w.jpg", "Singapore"], ["img/arch/flip_ny_b.jpg", "img/arch/flip_ny_w.jpg", "New York"]] },
+            { type: "notes", items: [["히어로", "영상 위에 20% 정도 어둡게 깔고 그 위에 LUCKIN COFFEE와 내비게이션, 로고를 배치했습니다. 폰트는 전체 Inter, 굵기는 Black, 자간은 -8%로 설정했으며 소리도 나올 수 있도록 했습니다."], ["지도", "지도 위치에 마우스를 올리면 호버 반응으로 매장 아이콘이 나타나도록 했습니다."], ["매장 카드", "마우스를 올리면 화면이 어두워지면서 유기체 블러 처리가 되고, 입체적인 카드가 팝업됩니다. 검은 카드에서 드래그하면 플립되면서 하얀 카드로 바뀌고, 다시 드래그하면 검은 카드로 돌아옵니다."]] },
+            { type: "tall2", items: [["img/arch/home.jpg", "원본 시안"], ["img/arch/homeint.jpg", "인터랙션을 적어 둔 시안"]] }
+          ] },
+
+        { id: "st-build", nav: "구현", room: "rB", eyebrow: "웹사이트 구현", title: "시안과 설계도를 프롬프트로",
+          paras: [
+            "인터랙션과 각각의 요소들을 자세히 배치하려면 코딩으로는 많은 시간이 걸리게 됩니다. 그래서 시안을 다 만든 후 웹사이트 구현은, 시안 사진을 쭉 깔고 각 섹션마다 담당될 부분을 설계도처럼 직접 만든 다음, 사진 이미지 시안과 설계도 시안, 섹션마다 요구했던 부분을 정리한 글 등을 프롬프트로 정리해 넣었습니다.",
+            "그렇게 해서 기획 단계에는 꽤 많은 시간이 걸렸지만, 웹사이트 빌딩 자체의 시간은 많이 단축할 수 있었습니다."
+          ],
+          blocks: [{ type: "chainbig", items: [["01", "시안 이미지", "완성한 시안 사진을 쭉 깔기"], ["02", "설계도", "섹션마다 담당될 부분 표시"], ["03", "요구사항 글", "섹션별 인터랙션 정리"], ["04", "프롬프트", "세 가지를 묶어서 전달"]] },
+                   { type: "images", cols: 1, items: [["img/hq/camp-home-memo.jpg", "섹션별 요구사항을 적어 둔 시안"]] }] },
+
+        { id: "st-kpi", nav: "KPI", room: "rB", eyebrow: "KPI 목표", title: "이렇게 성과를 확인하고 싶었습니다",
+          paras: ["광고에서 랜딩, 랜딩에서 다운로드, 다운로드에서 첫 구매, 그리고 재방문과 재구매로 이어지는 흐름을 기준으로 목표 수치를 잡았습니다. 실제 집행 결과가 아닌 기획 단계의 목표입니다."],
+          blocks: [{ type: "kpi", items: [["QR 스캔", "100,000회"], ["웹 경험 완료율", "60%"], ["앱 설치 전환율", "25%"], ["리워드 수령률", "40%"], ["첫 주문 전환율", "30–40%"]] }] }
+      ],
+      closing: { title: "마치며", paras: [
+        "이번 작업에서는 AI를 많이 활용했지만, 생성된 이미지 중 브랜드에 맞는 것을 고르고, 색감을 맞추고, 로고 하나까지 직접 넣는 과정은 결국 제가 판단해야 하는 부분이었습니다.",
+        "또한 기획 단계에서 시안과 설계도, 요구사항을 꼼꼼하게 정리해 두었기 때문에 웹사이트를 빌딩하는 시간을 많이 줄일 수 있었고, 생각을 정리하는 데 들인 시간이 결국 작업 전체를 빠르게 만들어 준다는 것을 느낄 수 있었던 작업입니다."
+      ] }
+    },
+    archive: {
+      title: "작업 소스",
+      lead: "피그마 파일에 정리하지 않은 채로 쌓여 있던 작업 소스들입니다. 이미지 레이어는 211개, 그중 ChatGPT로 생성해 남겨 둔 이미지는 116장이며, 고르는 과정에서 버린 것까지 합하면 훨씬 많습니다.",
+      groups: [
+        ["리서치 · 기획", "시장 상황부터 문제 정의, 타겟, KPI, 캠페인 컨셉까지", ["r_title","r_market","r_mkt2","r_brand","r_feature","r_web","r_problem","r_dir","r_mz","r_copy","r_target","r_kpi","r_concept","r_poster","r_mood"]],
+        ["QR 웹 · 플로우 시안", "You're missing your luck 웹을 여러 번 다시 그린 흔적", ["e1","gpt_early","e2","e6","brewweb","flow"]],
+        ["ChatGPT 매장 생성 후보", "도시 무드 레퍼런스를 주고 생성한 매장 사진 중 일부입니다", ["gen1","gen2","gen3","gen4","gen5","gen6","gen7","gen8","gen9","gen10","gen11","gen12","g3a","g3b","g3c","g3d"]],
+        ["메뉴 · 포스터", "대표 메뉴 컷, 메뉴 포스터, 도트 포스터, Midjourney 실험", ["menu1","menu2","menu3","bot3","bot2","bot1","poster_hey","poster1","poster2","poster3","poster4","e5","mj1","mj2","mj3"]],
+        ["도시 플립 카드", "상하이 · 싱가포르 · 뉴욕, 다크와 라이트 두 장씩", ["flip_sh_b","flip_sh_w","flip_sg_b","flip_sg_w","flip_ny_b","flip_ny_w"]],
+        ["히어로 영상 · 스토리보드", "Midjourney 지하철 컷, 로고를 합성한 최종 장면, 모바일 스토리보드", ["e3","e4","subway","seoul","story1","story2","story3","story4"]],
+        ["홈페이지 시안", "원본 시안과 섹션별 인터랙션 메모 버전", ["home","homeint"]]
+      ],
+      note: [
+        "중국에서 이미 폭발적인 인기로 중국 시장에서는 스타벅스보다 매장 수가 많은 루이싱 커피가 한국에 런칭한다면 어떨까라는 발상에서 시작되었습니다. 또한 글로벌로 런칭할 때도 맥락이 이어지길 바라는 마음으로 기획을 시작하게 되었습니다.",
+        "루이싱 커피는 앱을 처음 다운로드하면 쿠폰을 발급해 줍니다. 거의 공짜 커피 한 잔을 주는 셈입니다. 원래도 저가 커피이지만, 이 혜택을 더 재밌게 전달하면서 인앱 다운로드 수를 늘리고 브랜드의 이름까지 직관적으로 전달할 수 있는 방법이 무엇인지 고민했습니다. 그러던 중 루이싱의 이름(luck + in의 합성어)과 처음 받아보는 혜택인 공짜 커피를 연결해 보면 재미있겠다는 생각을 하게 되었습니다.",
+        "참여 대상을 파악해 보았을 때 글로벌 MZ세대, 그리고 커피를 가장 많이 소비하는 연령층 모두가 편하게 참여할 수 있는 콘텐츠는 어떤 것일까 생각해 보니, 스캔 한 번에 연결되는 QR 형식이 가장 적합하겠다고 판단하게 되었습니다.",
+        "그 결과 ‘You’re missing your luck’이라는 문구를 활용해 포스터를 만들고, 사람들의 포모를 자극해 QR 코드를 찍어 보게 하는 방식으로 인앱 다운로드를 받는 프로모션을 기획하게 되었습니다. QR을 찍으면 웹사이트가 나오고, 브루잉되는 인터랙션이 돌아가며 랜덤한 쿠폰들이 떠오르고, 바로 인앱 다운로드까지 연결되게끔 만들었습니다.",
+        "한국에 런칭하게 되는 상황이기에 한국 메인 홈페이지에는 히어로에 영상을 배치하는 방향을 넣었습니다. 이미 싱가포르와 중국, 뉴욕에 매장이 있다는 것을 알려 주고, 대표 메뉴 사진을 스타일리시하게 연출한 포스터를 배치했으며, 각국의 매장 사진들은 감성을 통일해 넣었습니다.",
+        "웹사이트의 전체적인 색감을 통일하기 위해 ChatGPT에 각 지역의 도시 사진 무드 레퍼런스를 준 후 루이싱 커피 매장을 생성해 달라고 했습니다. 몇십 장의 생성 끝에 매장이 잘 보이면서도 각국의 특색이 잘 드러나는 사진을 골랐고, 포토샵으로 전체적인 색감을 보정한 후 웹사이트 시안을 완성했습니다.",
+        "각 매장에도 그 나라의 특색을 나타내는 포스터가 있기를 바랐습니다. 그래서 한국과 중국, 미국, 싱가포르의 도시들을 나타내는 특색 있는 포스터를 만들었습니다. QR 코드가 자연스럽게 배치되면서 각 도시의 무드를 나타내는 포스터를 만들려면 도트화로 그리면 좋겠다고 생각했고, 몇 가지 도트 타입 포스터 레퍼런스를 수집한 후 QR 코드와 각 도시의 랜드마크가 잘 녹아 있는 포스터들을 디자인하게 되었습니다.",
+        "웹페이지에서는 각 매장의 사진이 나올 때 카드가 플립되며 회전하면 재미를 줄 수 있겠다는 생각이 들어, 각 섹션마다 라이트 버전과 다크 버전 2개를 배치했습니다.",
+        "메인 히어로에 들어가는 영상은, 커피를 가장 많이 소비하는 현대인들이 가장 많이 지나다니는 곳이 어디일까 생각했을 때 바로 떠오른 직장인들의 출근길 지하철로 정했습니다. 그래서 미드저니를 통해 각기 다른 플랫폼들과 사람들이 지나다니는 바쁜 길목 등을 생성했습니다. 미드저니가 타이포에 약해서, 생성된 이미지들은 업스케일링 후 어도비 포토샵 후보정으로 직접 로고를 플랫폼에 넣거나 간판에 배치했습니다. 그 후 다시 미드저니에서 영상으로 생성해, 포스터를 메인으로 장면이 자연스럽게 전환되는 캠페인 느낌의 영상을 제작해 넣게 되었습니다.",
+        "시안을 다 만든 후 웹사이트 구현은, 시안 사진을 쭉 깔고 각 섹션마다 담당될 부분을 설계도처럼 직접 만든 다음, 사진 이미지 시안 + 설계도 시안 + 섹션마다 요구했던 부분을 정리한 글 등을 프롬프트로 정리해 넣었습니다. 그렇게 해서 기획 단계에는 꽤 많은 시간이 걸렸지만, 웹사이트 빌딩 자체의 시간은 많이 단축할 수 있었던 작업입니다."
+      ]
+    },
     reflection: {
-      quote: "쿠폰을 뿌리는 브랜드에서,<br><em>행운을 발견하게 하는</em> 브랜드로.",
+      quote: "생성은 AI가,<br><em>고르고 다듬는 건</em> 제가.",
       learnings: [
-        ["Target · 목표 수치", "앱 다운로드 +25%, QR 참여율 +30%, 브랜드 인지도와 호감도 향상. KPI 예시는 QR 스캔 100,000회, 웹 완료율 60%, 앱 설치 전환 25%, 리워드 수령 40%, 첫 주문 전환 30–40%."],
-        ["What I learned", null]
+        ["Target · 목표 수치", "QR 스캔 100,000회, 웹 경험 완료율 60%, 앱 설치 전환율 25%, 리워드 수령률 40%, 첫 주문 전환율 30–40%."],
+        ["What I learned", "AI가 이미지를 몇십 장 만들어 줘도 무엇이 브랜드에 맞는지 고르고, 색을 맞추고, 로고 하나까지 넣는 건 결국 제 몫이었습니다. 인터랙션과 요소가 많은 웹사이트를 짧은 시간 안에 완성할 수 있었던 건 기획 단계에서 시안과 설계도, 요구사항을 꼼꼼하게 정리해 두었기 때문이었고, 생각을 정리하는 데 쓴 시간이 결국 가장 빠른 길이었습니다."]
       ]
     }
   },
@@ -359,8 +519,9 @@ const JOURNEY = {
     wide: ["img/guess-wireflow.jpg", "와이어플로우 · 아카이브 피드 홈 → 데님 핏 아카이브 → 핏 스캔 → 핏 분석 결과 → 상품 상세 → 내 데님 아카이브 → 결제"] },
   "luckin-web": { title: "한 잔의 비주얼에서 <b>앱 다운로드</b>까지", kind: "web",
     items: [["img/lkweb-hero.jpg", "Hero", "한 잔의 제품 비주얼"], ["img/lkweb-quality.jpg", "Quality", "카드로 읽는 품질 이야기"], ["img/lkweb-nearby.jpg", "Find Nearby", "가까운 매장 찾기"], ["img/lkweb-easy.jpg", "Easy", "앱으로 이어지는 주문"]] },
-  "luckin-campaign": { title: "포스터 한 장에서 <b>도시의 행운</b>까지", kind: "web",
-    items: [["img/camp-hero.jpg", "QR Poster", "스캔을 부르는 키비주얼"], ["img/camp-posters.jpg", "Poster Series", "도시마다 이어지는 포스터"], ["img/camp-web-hero.jpg", "Promo Web", "You can find us"], ["img/camp-web-map.jpg", "Lucky Map", "지도에서 찾는 행운"], ["img/camp-web-city.jpg", "City Cards", "도시 카드로 보는 행운"]] },
+  "luckin-campaign": { title: "지하철 포스터 한 장에서 <b>도시의 행운</b>까지", kind: "web",
+    items: [["img/hq/camp-subway.jpg", "Hero Video", "출근길 지하철에서 포스터로"], ["img/camp-posters.jpg", "Poster Series", "도시마다 이어지는 포스터"], ["img/hq/camp-brew-hero.jpg", "QR Web", "You're missing your luck"], ["img/camp-web-map.jpg", "Lucky Map", "지도에 마우스를 올리면 매장이"], ["img/camp-web-city.jpg", "City Cards", "드래그하면 뒤집히는 도시 카드"]],
+    wide: ["img/hq/camp-mj.jpg", "Midjourney로 포스터 무드를 실험한 초기 결과물들. 피그마 파일에는 이미지 레이어 211개, ChatGPT 생성 이미지 116장이 정리되지 않은 채 남아 있습니다."] },
   additable: { title: "표지에서 공간까지, <b>빛의 질감</b>으로 이어지는 팜플렛", kind: "web",
     items: [["img/add-cover.jpg", "Cover", "빛을 형상화한 표지"], ["img/add-spread.jpg", "Spread", "펼침면 구성"], ["img/add-inside.jpg", "Inside", "공간에 놓인 제품"]] }
 };
@@ -407,9 +568,14 @@ const FX = {
             ["arrow-out", "Web to App", "앱으로 이어지지 않는 웹", "Find Nearby · Download App"]] },
   "luckin-campaign": {
     intent: { kind: "image", src: "img/camp-hero.jpg", title: "할인이 아니라 <b>놓치기 싫은 행운</b>으로", pts: [[50, 22, 0], [55, 63, 1]] },
-    fixes: [["bolt", "FOMO", "가격 중심 쿠폰", "You’re missing your luck"],
-            ["qr", "Scan to Claim", "할인만 남는 다운로드", "Scan · Brew · Reveal · Claim"],
-            ["globe", "Lucky Cities", "투자 정보뿐인 웹", "도시 카드로 찾는 행운"]] },
+    fixes: [["qr", "Scan Once", "가격 중심 쿠폰", "스캔 한 번에 연결되는 QR"],
+            ["bolt", "FOMO", "Looking for your luck?", "You’re missing your luck"],
+            ["eye", "Korea Home", "투자 정보뿐인 웹", "히어로 영상 · 메뉴 포스터"],
+            ["sparkle", "AI + Curation", "제각각인 매장 사진", "골라서 색감을 통일한 매장"],
+            ["frame", "Dot Posters", "흔한 도시 사진", "QR과 랜드마크를 녹인 도트 포스터"],
+            ["layers", "Flip Cards", "나열된 매장 사진", "라이트 · 다크로 뒤집히는 카드"],
+            ["globe", "Commute Hero", "타이포가 깨진 생성 이미지", "로고를 합성한 지하철 영상"],
+            ["arrow-out", "Prompt Blueprint", "요소마다 오래 걸리는 코딩", "시안 + 설계도 + 요구사항 프롬프트"]] },
   additable: {
     intent: { kind: "image", src: "img/add-cover.jpg", title: "따뜻한 조명이 아니라 <b>차갑게 번지는 빛</b>으로", pts: [[40, 85, 0], [78, 40, 1]] },
     fixes: [["drop", "Modern Cool", "Warm & cozy", "Modern cool"],
